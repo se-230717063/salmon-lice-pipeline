@@ -1,7 +1,21 @@
-﻿.env
-__pycache__/
-*.pyc
-data/raw/
+# Environments
+.env
 .venv/
 venv/
+ENV/
+env/
 
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# IDEs
+.vscode/
+.idea/
+
+# macOS
+.DS_Store
+
+# Not: BarentsWatch NLOD lisansı verinin paylaşılmasına izin veriyor.
+# Ancak dosyalar çok büyükse (örneğin 100MB+), data/raw/ klasörünü buraya ekleyebilirsiniz.
