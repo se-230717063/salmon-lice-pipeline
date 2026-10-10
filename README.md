@@ -21,5 +21,5 @@ We investigate whether lagged sea temperature, temperature anomalies, delousing 
 M1 — ingestion complete (WIP)
 
 ## Team
-- Çağatay Oruk (GitHub: [YourUsername])
-- Mehmet Egemen Karagöz (GitHub: [YourUsername])
+- Çağatay Oruk (GitHub: se-230717041)
+- Mehmet Egemen Karagöz (GitHub: se-230717063)
