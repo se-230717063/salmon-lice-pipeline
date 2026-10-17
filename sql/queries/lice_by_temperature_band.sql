@@ -1,5 +1,6 @@
--- Question: How does the proportion of reporting weeks with average adult female lice exceeding the 
---           statutory threshold (>= 0.2) vary across 2 °C sea temperature bands?
+-- Question: How does the proportion of reporting weeks with average adult female lice exceeding a 
+--           fixed analytical threshold of 0.2 (not the legal limit, which is 0.5 outside the spring windows)
+--           vary across 2 °C sea temperature bands?
 -- Result grain: One row per 2 °C sea temperature band.
 -- Why aggregation is correct at this grain:
 --   Readings from lice_weekly and sea_temperature_weekly are joined 1-to-1 on (locality_key, year, week),

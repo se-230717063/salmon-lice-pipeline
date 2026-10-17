@@ -16,7 +16,7 @@ import sqlite3
 import sys
 import tempfile
 
-from db import DB_PATH, connect, snapshot, table_counts
+from db import DB_PATH, connect, init_schema, snapshot, table_counts
 from load import SimulatedFailure, run_load
 
 INSERT_LOCALITY = (
@@ -105,16 +105,17 @@ def check_idempotence(db_path):
     return False, f"FAIL: state changed after re-load"
 
 
-def check_atomicity(db_path):
+def check_atomicity(tmp_dir):
     """A load that fails partway leaves every table's row count unchanged."""
-    con = connect(db_path)
+    target = pathlib.Path(tmp_dir) / "atomicity.db"
+    con = connect(target)
+    init_schema(con)
     before = get_table_counts(con)
     con.close()
 
     failed = False
     try:
-        # Trigger simulated failure after writing 50 rows
-        run_load(db_path=db_path, fail_after_rows=50, quiet=True)
+        run_load(db_path=target, fail_after_rows=1000, quiet=True)
     except SimulatedFailure:
         failed = True
     except Exception as exc:
@@ -123,13 +124,10 @@ def check_atomicity(db_path):
     if not failed:
         return False, "Loader did not raise SimulatedFailure"
 
-    con = connect(db_path)
+    con = connect(target)
     after = get_table_counts(con)
     con.close()
-
-    if before == after:
-        return True, "PASS"
-    return False, f"FAIL: row counts changed ({before} -> {after})"
+    return (True, "PASS") if before == after else (False, f"FAIL: row counts changed ({before} -> {after})")
 
 
 def run_all_checks():
@@ -162,8 +160,8 @@ def run_all_checks():
         ok, msg = check_idempotence(tmp_db)
         results.append(("Idempotence", ok, msg))
 
-        # Atomicity check (runs loader with simulated failure on copy)
-        ok, msg = check_atomicity(tmp_db)
+        # Atomicity check (runs loader with simulated failure on fresh empty db)
+        ok, msg = check_atomicity(tmp_dir)
         results.append(("Atomicity", ok, msg))
 
     print("\n=== INTEGRITY CHECKS SUMMARY ===")

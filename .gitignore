@@ -34,7 +34,5 @@ checks_output.txt
 
 # Course assignment PDFs and local scratch
 *.pdf
-*.txt
-!requirements.txt
-!config/cohort.txt
+m1 repo url.txt
 salmon-lice-pipeline/

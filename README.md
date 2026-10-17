@@ -18,10 +18,9 @@ We will investigate whether lagged sea temperature, temperature anomalies, delou
    pip install -r requirements.txt
    ```
 4. Copy `.env.example` to `.env` and fill in your API credentials (`BW_CLIENT_ID` = email:client_name).
-5. Ingestion (M1):
-   ```bash
-   python src/ingest.py
-   ```
+5. Acquire raw data (raw data is not in git):
+   - Either run `python src/ingest.py` (requires active API credentials in `.env`),
+   - Or extract a provided `raw_data.tar.gz` archive: `tar -xzf raw_data.tar.gz -C data`.
 6. Build database and run integrity checks (M2):
    ```bash
    python src/load.py
@@ -140,21 +139,23 @@ erDiagram
 - **`quarantine`**: One row means one malformed, unparseable, or orphaned record that could not be loaded into the core relational schema.
 
 ### 6.3 Decisions and Findings
+- **Re-fetched copies**: M1 was run twice, so all 200 (locality, year) pairs exist as two files per folder with different `retrieved_at` values. The loader keeps the latest retrieval per key; 26,337 duplicate rows were collapsed.
 - **Keys**: Verified empirically via `src/explore_raw.py` across 1,204 landed raw files. The natural keys `locality_no` and `municipality_no` are unique across all files with zero naming drift. In the time-series files, `(locality_key, year, week)` exhibited zero duplicate weeks per file, confirming it as the natural composite event key. For nested treatment items, medicinal treatments lack an external identifier in the API payload, so items are uniquely identified by composite key `(locality_key, year, week, category, event_seq)`, with the full payload preserved in `details_json`.
 - **Missing values**: In `sea_temperature_weekly`, 3,234 records have `hasReported == false` and `seaTemperature == None`. These are loaded as `has_reported = 0` and `sea_temperature = NULL` rather than `0.0`, ensuring temperature aggregations are not corrupted. In `lice_weekly`, 0 nulls or non-numeric values were present for active reporting weeks.
 - **Unknown references**: Any record referencing a `locality_no` absent from `locality` is automatically quarantined into `quarantine` rather than crashing or being silently dropped (0 orphans were found in the cohort).
 - **Change over time**: Entity attributes (locality names, registry versions, municipalities) follow a Type 1 policy: the record from the most recent `retrieved_at` timestamp wins (`ON CONFLICT ... DO UPDATE WHERE excluded.retrieved_at > ...`). Newly added entities are highlighted in the loader summary.
 - **Known issues**:
   - Outliers in temperature: The raw dataset contains extreme sensor / manual entry artifacts (e.g., 35.0 °C and 197.0 °C). In strict accordance with M2 scope, raw values are loaded as recorded; outlier treatment is deferred to M3 cleaning.
-  - Week 53: Leap year weeks occur in temperature data (week range 1..53), handled by table `CHECK (week BETWEEN 1 AND 53)`.
+  - Week 53: ISO 8601 calendar years with 53 weeks (e.g. 2020, 2026) occur in temperature data (week range 1..53), handled by table `CHECK (week BETWEEN 1 AND 53)`.
   - Empty categories: `cleanerFishTreatments` currently contains 0 items across the cohort dataset.
 
 ### 6.4 Analytical Query
 **File**: [`sql/queries/lice_by_temperature_band.sql`](sql/queries/lice_by_temperature_band.sql)
 
 ```sql
--- Question: How does the proportion of reporting weeks with average adult female lice exceeding the 
---           statutory threshold (>= 0.2) vary across 2 °C sea temperature bands?
+-- Question: How does the proportion of reporting weeks with average adult female lice exceeding a 
+--           fixed analytical threshold of 0.2 (not the legal limit, which is 0.5 outside the spring windows)
+--           vary across 2 °C sea temperature bands?
 -- Result grain: One row per 2 °C sea temperature band.
 -- Why aggregation is correct at this grain:
 --   Readings from lice_weekly and sea_temperature_weekly are joined 1-to-1 on (locality_key, year, week),
