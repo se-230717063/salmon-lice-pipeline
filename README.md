@@ -141,7 +141,7 @@ erDiagram
 ### 6.3 Decisions and Findings
 - **Re-fetched copies**: M1 was run twice, so all 200 (locality, year) pairs exist as two files per folder with different `retrieved_at` values. The loader keeps the latest retrieval per key; 26,337 duplicate rows were collapsed.
 - **Keys**: Verified empirically via `src/explore_raw.py` across 1,204 landed raw files. The natural keys `locality_no` and `municipality_no` are unique across all files with zero naming drift. In the time-series files, `(locality_key, year, week)` exhibited zero duplicate weeks per file, confirming it as the natural composite event key. For nested treatment items, medicinal treatments lack an external identifier in the API payload, so items are uniquely identified by composite key `(locality_key, year, week, category, event_seq)`, with the full payload preserved in `details_json`.
-- **Missing values**: In `sea_temperature_weekly`, 3,234 records have `hasReported == false` and `seaTemperature == None`. These are loaded as `has_reported = 0` and `sea_temperature = NULL` rather than `0.0`, ensuring temperature aggregations are not corrupted. In `lice_weekly`, 0 nulls or non-numeric values were present for active reporting weeks.
+- **Missing values**: In `sea_temperature_weekly`, 3,234 records have `hasReported == false` and `seaTemperature == None`. These are loaded as `has_reported = 0` and `sea_temperature = NULL` rather than `0.0`, ensuring temperature aggregations are not corrupted. In `lice_weekly`, the API returns only weeks for which a lice count was reported; a week that is absent means "not reported", and no placeholder rows are created. 0 nulls or non-numeric values were present in the landed data. The loader converts any non-numeric value in a numeric column to NULL and counts it (`values cleaned` in the run summary); in the current data this count is 0.
 - **Unknown references**: Any record referencing a `locality_no` absent from `locality` is automatically quarantined into `quarantine` rather than crashing or being silently dropped (0 orphans were found in the cohort).
 - **Change over time**: Entity attributes (locality names, registry versions, municipalities) follow a Type 1 policy: the record from the most recent `retrieved_at` timestamp wins (`ON CONFLICT ... DO UPDATE WHERE excluded.retrieved_at > ...`). Newly added entities are highlighted in the loader summary.
 - **Known issues**:
@@ -205,5 +205,5 @@ ORDER BY FLOOR(t.sea_temperature / 2.0);
 M2 — schema and load complete
 
 ## Team
-- Çağatay Oruk (GitHub: 230717041)
+- Çağatay Oruk (GitHub: se-230717041)
 - Mehmet Egemen Karagöz (GitHub: se-230717063)
