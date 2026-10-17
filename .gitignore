@@ -23,3 +23,7 @@ data/raw/*
 
 # Local probe/exploration output
 probe_output/
+
+# SQLite database (derived; rebuilt by src/load.py)
+data/*.db
+data/*.db-*
