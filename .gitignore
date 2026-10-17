@@ -27,3 +27,14 @@ probe_output/
 # SQLite database (derived; rebuilt by src/load.py)
 data/*.db
 data/*.db-*
+
+# Run outputs for grading submission
+load_run*.txt
+checks_output.txt
+
+# Course assignment PDFs and local scratch
+*.pdf
+*.txt
+!requirements.txt
+!config/cohort.txt
+salmon-lice-pipeline/
