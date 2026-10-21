@@ -26,7 +26,7 @@ coverage: 2022-2026, 40 selected active cohort sites.
 record_meaning: one row = one locality's average female lice count for one week
 join_key: localityNo, year, week
 first_retrieved: 20261010T181800Z
-known_issues: 2012-2016 history is sparse; version/revision fields exist; float32 artifacting.
+known_issues: version/revision fields exist; float32 artifacting. (An earlier remark about sparse 2012-2016 history was removed: outside the landed range 2022-2026 and never verified.)
 
 ## 3. Sea Temperature
 source_name: BarentsWatch Sea Temperature
