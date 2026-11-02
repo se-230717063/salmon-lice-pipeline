@@ -13406,6 +13406,667 @@
       }
     }
   },
+  "treatment_by_locality": {
+    "10110": {
+      "events": 9,
+      "missing_cages": 1,
+      "cages_min_median_max": [
+        0,
+        1.0,
+        3
+      ],
+      "first_week": [
+        2024,
+        32
+      ],
+      "last_week": [
+        2026,
+        39
+      ]
+    },
+    "10262": {
+      "events": 67,
+      "missing_cages": 4,
+      "cages_min_median_max": [
+        0,
+        1,
+        8
+      ],
+      "first_week": [
+        2022,
+        30
+      ],
+      "last_week": [
+        2026,
+        39
+      ]
+    },
+    "10292": {
+      "events": 12,
+      "missing_cages": 4,
+      "cages_min_median_max": [
+        1,
+        2.5,
+        4
+      ],
+      "first_week": [
+        2023,
+        15
+      ],
+      "last_week": [
+        2026,
+        39
+      ]
+    },
+    "10324": {
+      "events": 21,
+      "missing_cages": 15,
+      "cages_min_median_max": [
+        1,
+        3.0,
+        5
+      ],
+      "first_week": [
+        2022,
+        28
+      ],
+      "last_week": [
+        2025,
+        49
+      ]
+    },
+    "10328": {
+      "events": 16,
+      "missing_cages": 5,
+      "cages_min_median_max": [
+        1,
+        2,
+        3
+      ],
+      "first_week": [
+        2024,
+        11
+      ],
+      "last_week": [
+        2026,
+        25
+      ]
+    },
+    "11290": {
+      "events": 14,
+      "missing_cages": 5,
+      "cages_min_median_max": [
+        0,
+        2,
+        5
+      ],
+      "first_week": [
+        2023,
+        29
+      ],
+      "last_week": [
+        2026,
+        33
+      ]
+    },
+    "11312": {
+      "events": 12,
+      "missing_cages": 6,
+      "cages_min_median_max": [
+        0,
+        2.5,
+        4
+      ],
+      "first_week": [
+        2023,
+        17
+      ],
+      "last_week": [
+        2026,
+        39
+      ]
+    },
+    "11350": {
+      "events": 18,
+      "missing_cages": 11,
+      "cages_min_median_max": [
+        0,
+        2,
+        7
+      ],
+      "first_week": [
+        2022,
+        36
+      ],
+      "last_week": [
+        2026,
+        39
+      ]
+    },
+    "11405": {
+      "events": 4,
+      "missing_cages": 4,
+      "cages_min_median_max": null,
+      "first_week": [
+        2022,
+        4
+      ],
+      "last_week": [
+        2025,
+        35
+      ]
+    },
+    "11800": {
+      "events": 16,
+      "missing_cages": 2,
+      "cages_min_median_max": [
+        3,
+        4.0,
+        6
+      ],
+      "first_week": [
+        2022,
+        39
+      ],
+      "last_week": [
+        2026,
+        37
+      ]
+    },
+    "12244": {
+      "events": 38,
+      "missing_cages": 4,
+      "cages_min_median_max": [
+        1,
+        1.0,
+        3
+      ],
+      "first_week": [
+        2022,
+        31
+      ],
+      "last_week": [
+        2026,
+        35
+      ]
+    },
+    "12652": {
+      "events": 65,
+      "missing_cages": 6,
+      "cages_min_median_max": [
+        1,
+        1,
+        6
+      ],
+      "first_week": [
+        2022,
+        38
+      ],
+      "last_week": [
+        2025,
+        40
+      ]
+    },
+    "12660": {
+      "events": 55,
+      "missing_cages": 7,
+      "cages_min_median_max": [
+        0,
+        1.0,
+        9
+      ],
+      "first_week": [
+        2022,
+        4
+      ],
+      "last_week": [
+        2026,
+        29
+      ]
+    },
+    "12714": {
+      "events": 25,
+      "missing_cages": 3,
+      "cages_min_median_max": [
+        0,
+        1.0,
+        7
+      ],
+      "first_week": [
+        2022,
+        28
+      ],
+      "last_week": [
+        2026,
+        40
+      ]
+    },
+    "12855": {
+      "events": 3,
+      "missing_cages": 2,
+      "cages_min_median_max": [
+        1,
+        1,
+        1
+      ],
+      "first_week": [
+        2025,
+        15
+      ],
+      "last_week": [
+        2025,
+        29
+      ]
+    },
+    "12897": {
+      "events": 14,
+      "missing_cages": 6,
+      "cages_min_median_max": [
+        1,
+        1.5,
+        6
+      ],
+      "first_week": [
+        2022,
+        5
+      ],
+      "last_week": [
+        2025,
+        47
+      ]
+    },
+    "13226": {
+      "events": 3,
+      "missing_cages": 1,
+      "cages_min_median_max": [
+        1,
+        1.0,
+        1
+      ],
+      "first_week": [
+        2024,
+        50
+      ],
+      "last_week": [
+        2026,
+        1
+      ]
+    },
+    "13229": {
+      "events": 32,
+      "missing_cages": 18,
+      "cages_min_median_max": [
+        0,
+        1.5,
+        3
+      ],
+      "first_week": [
+        2022,
+        25
+      ],
+      "last_week": [
+        2026,
+        38
+      ]
+    },
+    "13870": {
+      "events": 8,
+      "missing_cages": 7,
+      "cages_min_median_max": [
+        4,
+        4,
+        4
+      ],
+      "first_week": [
+        2023,
+        17
+      ],
+      "last_week": [
+        2025,
+        14
+      ]
+    },
+    "20316": {
+      "events": 7,
+      "missing_cages": 4,
+      "cages_min_median_max": [
+        0,
+        2,
+        6
+      ],
+      "first_week": [
+        2024,
+        46
+      ],
+      "last_week": [
+        2025,
+        48
+      ]
+    },
+    "20559": {
+      "events": 49,
+      "missing_cages": 9,
+      "cages_min_median_max": [
+        1,
+        1.0,
+        1
+      ],
+      "first_week": [
+        2022,
+        1
+      ],
+      "last_week": [
+        2026,
+        2
+      ]
+    },
+    "22095": {
+      "events": 11,
+      "missing_cages": 6,
+      "cages_min_median_max": [
+        0,
+        5,
+        6
+      ],
+      "first_week": [
+        2024,
+        27
+      ],
+      "last_week": [
+        2026,
+        40
+      ]
+    },
+    "26955": {
+      "events": 8,
+      "missing_cages": 2,
+      "cages_min_median_max": [
+        1,
+        1.0,
+        2
+      ],
+      "first_week": [
+        2025,
+        12
+      ],
+      "last_week": [
+        2025,
+        51
+      ]
+    },
+    "29816": {
+      "events": 13,
+      "missing_cages": 4,
+      "cages_min_median_max": [
+        0,
+        2,
+        3
+      ],
+      "first_week": [
+        2022,
+        50
+      ],
+      "last_week": [
+        2026,
+        39
+      ]
+    },
+    "30517": {
+      "events": 13,
+      "missing_cages": 3,
+      "cages_min_median_max": [
+        1,
+        1.0,
+        1
+      ],
+      "first_week": [
+        2022,
+        19
+      ],
+      "last_week": [
+        2025,
+        32
+      ]
+    },
+    "31497": {
+      "events": 17,
+      "missing_cages": 10,
+      "cages_min_median_max": [
+        1,
+        2,
+        4
+      ],
+      "first_week": [
+        2023,
+        3
+      ],
+      "last_week": [
+        2026,
+        5
+      ]
+    },
+    "31557": {
+      "events": 23,
+      "missing_cages": 7,
+      "cages_min_median_max": [
+        1,
+        2.0,
+        7
+      ],
+      "first_week": [
+        2023,
+        20
+      ],
+      "last_week": [
+        2026,
+        11
+      ]
+    },
+    "31757": {
+      "events": 7,
+      "missing_cages": 4,
+      "cages_min_median_max": [
+        2,
+        3,
+        8
+      ],
+      "first_week": [
+        2025,
+        33
+      ],
+      "last_week": [
+        2026,
+        32
+      ]
+    },
+    "33197": {
+      "events": 21,
+      "missing_cages": 9,
+      "cages_min_median_max": [
+        1,
+        1.0,
+        3
+      ],
+      "first_week": [
+        2022,
+        33
+      ],
+      "last_week": [
+        2025,
+        43
+      ]
+    },
+    "33617": {
+      "events": 46,
+      "missing_cages": 1,
+      "cages_min_median_max": [
+        1,
+        1,
+        9
+      ],
+      "first_week": [
+        2022,
+        31
+      ],
+      "last_week": [
+        2025,
+        31
+      ]
+    },
+    "34457": {
+      "events": 28,
+      "missing_cages": 10,
+      "cages_min_median_max": [
+        0,
+        1.0,
+        12
+      ],
+      "first_week": [
+        2022,
+        25
+      ],
+      "last_week": [
+        2026,
+        29
+      ]
+    },
+    "35377": {
+      "events": 39,
+      "missing_cages": 4,
+      "cages_min_median_max": [
+        0,
+        2,
+        7
+      ],
+      "first_week": [
+        2023,
+        28
+      ],
+      "last_week": [
+        2026,
+        15
+      ]
+    },
+    "35617": {
+      "events": 17,
+      "missing_cages": 6,
+      "cages_min_median_max": [
+        1,
+        4,
+        9
+      ],
+      "first_week": [
+        2023,
+        4
+      ],
+      "last_week": [
+        2025,
+        52
+      ]
+    },
+    "36077": {
+      "events": 41,
+      "missing_cages": 3,
+      "cages_min_median_max": [
+        0,
+        1.0,
+        5
+      ],
+      "first_week": [
+        2022,
+        28
+      ],
+      "last_week": [
+        2026,
+        38
+      ]
+    },
+    "36517": {
+      "events": 9,
+      "missing_cages": 4,
+      "cages_min_median_max": [
+        0,
+        3,
+        8
+      ],
+      "first_week": [
+        2025,
+        24
+      ],
+      "last_week": [
+        2026,
+        37
+      ]
+    },
+    "36737": {
+      "events": 22,
+      "missing_cages": 11,
+      "cages_min_median_max": [
+        0,
+        0,
+        6
+      ],
+      "first_week": [
+        2023,
+        28
+      ],
+      "last_week": [
+        2026,
+        7
+      ]
+    },
+    "37357": {
+      "events": 42,
+      "missing_cages": 7,
+      "cages_min_median_max": [
+        1,
+        1,
+        5
+      ],
+      "first_week": [
+        2022,
+        37
+      ],
+      "last_week": [
+        2025,
+        50
+      ]
+    },
+    "45017": {
+      "events": 17,
+      "missing_cages": 10,
+      "cages_min_median_max": [
+        1,
+        5,
+        6
+      ],
+      "first_week": [
+        2023,
+        5
+      ],
+      "last_week": [
+        2026,
+        38
+      ]
+    },
+    "45025": {
+      "events": 27,
+      "missing_cages": 12,
+      "cages_min_median_max": [
+        1,
+        1,
+        9
+      ],
+      "first_week": [
+        2022,
+        39
+      ],
+      "last_week": [
+        2026,
+        40
+      ]
+    }
+  },
   "substance_code_names": {
     "0": [
       "Annet virkestoff",

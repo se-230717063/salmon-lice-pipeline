@@ -1,5 +1,9 @@
 # M3 devir notu: Cagatay -> Egemen
 
+> Arsivlenmis ara asama devir notu. Egemen'e ayrilan bolum de tamamlandi;
+> guncel durum README ve docs/cleaning_report.md icindedir. Asagidaki pending
+> ifadeleri ilk devir anini anlatir. M3 etiketi kullanici talimati bekliyor.
+
 Bu devirde Cagatay'in olcum profili, temizleme kurallari, tablo semalari ve rapor 1-5
 bolumleri tamamlandi. **M3 tamamlanmadi; m3 etiketi atilmayacak.** README'deki genel
 durumun M2 kalmasi bu asamada kasitli. Veri, mevcut M1 arsivinden; API tekrar cagrilmadi.

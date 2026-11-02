@@ -1,0 +1,14 @@
+﻿lice_weekly_clean: 6951 rows (same as M2)
+  ok: 6813
+  unusual_high: 138
+sea_temperature_weekly_clean: 10440 rows (same as M2)
+  future_placeholder: 480
+  invalid_range: 1
+  missing_not_reported: 2754
+  ok: 7164
+  suspect_spike: 5
+  suspect_stuck: 31
+  unusual_low: 5
+M2 contents: UNCHANGED; foreign_key_check: OK
+categories: {'mapping_rows_loaded': {'municipality_name_mapping': 0, 'locality_name_mapping': 3, 'treatment_value_mapping': 8, 'locality_identity_mapping': 0}, 'mapping_entries_matched': {'municipality_name_mapping': 0, 'locality_name_mapping': 3, 'treatment_value_mapping': 8, 'locality_identity_mapping': 0}, 'unmatched_mapping_entries': [], 'table_rows': {'municipality_clean': 371, 'locality_clean': 2710, 'treatment_weekly_clean': 816, 'treatment_event_clean': 889}, 'flag_counts': {'municipality_clean.name': {'ok': 371}, 'locality_clean.name': {'ok': 2707, 'mapped': 3}, 'locality_clean.registry_version': {'ok': 2710}, 'treatment_weekly_clean.mechanical_removal': {'ok': 816}, 'treatment_weekly_clean.mechanical_removal_entire_locality': {'ok': 816}, 'treatment_event_clean.category': {'ok': 889}, 'treatment_event_clean.treatment_type': {'mapped': 855, 'not_applicable': 34}, 'treatment_event_clean.substance_name': {'not_applicable': 725, 'ok': 164}, 'treatment_event_clean.substance_id': {'not_applicable': 725, 'ambiguous_code': 93, 'ok': 71}, 'treatment_event_clean.number_of_cages': {'ok': 652, 'missing_unknown': 203, 'not_applicable': 34}}}
+STATUS: BUILD COMPLETE - run validate.py

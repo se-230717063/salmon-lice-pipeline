@@ -1,0 +1,11 @@
+﻿PASS row_counts All six cleaned tables equal their source row counts
+PASS raw_preservation Changed keys/raw/provenance: []
+PASS impossible_values {'negative_lice': 0, 'temperature_range': 0, 'negative_cages': 0, 'invalid_flag_with_value': 0, 'lice_invalid_flag_with_value': 0, 'calendar_or_future_values': 0}
+PASS foreign_keys No M2/M3 foreign-key violations
+PASS strict_schema Non-STRICT tables: []
+WARN missing_share Elapsed temperature NULL share > 0.35: {10292: 0.3775, 10324: 0.4458, 11405: 0.3976, 12652: 0.4217, 12855: 0.3574, 20559: 0.3614, 26955: 0.3534, 29816: 0.3614, 30517: 0.4779, 31497: 0.4458, 33617: 0.3936, 35377: 0.3534}
+WARN freshness Expected (2026, 40) at retrieval 2026-10-10; usable 26/40; missing [10324, 10328, 11290, 11922, 12652, 12660, 20559, 31497, 31557, 31757, 33197, 33617, 35377, 36737]
+WARN sequence_review Retained suspect measurements: [('suspect_spike', 5), ('suspect_stuck', 31)]
+WARN ambiguous_substance_code 93 medicinal events have non-identifying substance code 0; names preserved
+WARN unknown_cages 203 non-wrapper interventions have unknown cage counts
+PASS mapping_matches Unused mapping entries: []

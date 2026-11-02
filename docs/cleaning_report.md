@@ -1,9 +1,8 @@
 # Cleaning Report - Salmon Lice Pipeline
 
-> Working report: Cagatay's measurement investigation and sections 1-5 are complete.
-> Egemen must finish the category/identity investigation, sections 6-8, validate.py,
-> README and final integration before this is an M3 submission. Counts below describe
-> the measurement stage, not a fully validated M3 pipeline.
+> Final M3 build evidence, before submission tagging. Both assigned stages were
+> AI-assisted; the named team members own the decisions recorded for their stage.
+> No M3 tag or course-system submission has been made by this implementation.
 
 ## 1. Summary
 
@@ -13,14 +12,15 @@ read-only [notebook](../notebooks/m3_profile.ipynb). The measurement tables cont
 contains 2,710 localities, not 2,710 time-series subjects. The most important findings
 are historical non-reporting, future temperature placeholders, one screened-invalid
 temperature, and several suspicious sequences whose causes remain unknown.
-The measurement cleaned layer preserves every key, row, raw measurement and retrieval
+The cleaned layer preserves every key, row, raw measurement and retrieval
 timestamp, leaves missing values unfilled, replaces only the screened-invalid
 temperature with NULL, and retains statistically unusual and sequentially suspect
 measurements. Hashes of all seven M2 tables match before and after cleaning, and a
 fresh rebuild from landed raw data matches the existing M2 database. No M2 loader or
 schema correction was needed; the shared connect helper gained a backwards-compatible
-read-only option for profiling. Category/identity decisions and full validation remain
-for Egemen, and measurement causes cannot be established from these reports alone.
+read-only option for profiling. Egemen's category stage adds explicit CSV mappings,
+structural-missingness flags and tested validation; measurement causes still cannot
+be established from these reports alone.
 
 ## 2. Profile highlights
 
@@ -77,6 +77,13 @@ additional rows. Cause labels distinguish evidence from interpretation.
 | I-08 | Unusual | sea_temperature_weekly.sea_temperature | Five low values, locality 11922 | Per-locality outer IQR fence; zero not established as a sentinel | Preserve every value | unusual_low | Cagatay Oruk |
 | I-09 | Across rows | lice_weekly.avg_adult_female_lice | Long exact runs are zero; longest 42 consecutive weeks at 13226 | Zero is a possible count; repetition alone cannot identify malfunction | Keep zero; do not apply temperature stuck rule to lice | ok, unless another rule applies | Cagatay Oruk |
 | I-10 | Across rows / units | sea_temperature_weekly.sea_temperature | Seven candidate boundaries in localities 11922 and 13870 | Adjacent four-week medians differ >=8 C; six boundaries surround a zero interval at 11922, not six independent events | Unknown cause; no unit conversion or automatic deletion | Existing value flags only; diagnostic in notebook | Cagatay Oruk |
+| I-11 | Text | locality.name | Three whitespace variants, source IDs 11743, 45246, 45276 | repr() shows doubled/trailing spaces; confirmed string differences | Three source-ID-scoped CSV mappings, no ID merge | mapped | Mehmet Egemen Karagoz |
+| I-12 | Categories | treatment_event.treatment_type | Eight distinct labels across 855 leaf events; mixed case and languages | Exact value inventory; semantic equivalence of translated labels unverified | Eight explicit case-only mappings; Bath and BADEBEHANDLING remain distinct | mapped | Mehmet Egemen Karagoz |
+| I-13 | Identity / codes | treatment_event.substance_id | Code 0 covers six substance names and 93 medicinal events | M2 code/name grouping confirms many-to-one collision; underlying API reason unknown | Keep both code and name; do not identify a drug by code 0 | ambiguous_code | Mehmet Egemen Karagoz |
+| I-14 | Missing / structure | treatment_event | 34 combination wrappers have no type/cages; 725 non-medicinal/wrapper rows have no substance | All absences align with source category; structural explanation inferred from details_json layout | Keep NULL, distinguish non-applicable from unknown | not_applicable | Mehmet Egemen Karagoz |
+| I-15 | Missing | treatment_event.number_of_cages | 118 medicinal plus 85 non-medicinal NULLs | Strong dependence on entire_locality; exact omission reason unknown | Do not infer farm cage totals or replace with zero | missing_unknown | Mehmet Egemen Karagoz |
+| I-16 | Identity | locality | 101 exact duplicate-name groups; 24 same-normalised-name/same-municipality candidates | Registry IDs differ; no coordinates or re-registration logs in M2 | Names alone cannot justify merging; identity CSV remains empty | No merge | Mehmet Egemen Karagoz |
+| I-17 | Text / history | municipality.name | Current 5054 name is already Indre Fosen | M2 Type 1 snapshot retains one spelling; older uppercase variant documented in M2 README | Do not manufacture an unmatched historical alias; mapping CSV remains empty | ok | Mehmet Egemen Karagoz |
 
 ### Checked and not found
 
@@ -87,7 +94,10 @@ additional rows. Cause labels distinguish evidence from interpretation.
 | Across fields | has_reported=0 with value, or has_reported=1 with NULL | 0 contradictions |
 | Invalid / time | Non-NULL measurements in weeks after retrieval | 0 |
 | Identity / references | PRAGMA foreign_key_check; measurement locality coverage | No orphan FK; all 40 cohort localities present; this is not proof against re-registration |
-| Text/categories/units | repr() inventories of registry names/versions and treatment vocabularies | Inventories executed; decisions and semantic unit/identity review assigned to Egemen, not claimed complete |
+| Text/categories/units | repr() inventories, NFC/whitespace comparison and category-level distributions | Three whitespace fixes; no mixed measurement unit established; no automatic conversion |
+| Invalid | number_of_cages < 0 | 0 of 652 non-NULL event cage counts |
+| Across fields | entire_locality weekly flag true with mechanical_removal false | 0 of 816 weekly reports |
+| Identity | Different source IDs with equal names, including municipality | Candidates found, but no evidenced merge; not a claim that registry identities never change |
 
 ## 4. Missing values
 
@@ -117,6 +127,17 @@ gap count understates total unobserved cohort-calendar coverage by design. Calen
 lags in later analyses must join on actual weeks rather than shift consecutive rows.
 No averaging, forward filling, interpolation, or replacement with zero occurs in M3.
 No missing flag states a cause such as maintenance or saturation without evidence.
+
+**Treatment fields.** Category-dependent absent leaf fields are structural, not random:
+725 non-medicinal/wrapper substance fields and 34 wrapper type/cage fields are marked
+not_applicable. This is a deterministic MAR-like pattern conditional on observed
+category, not evidence of missing drug reports. Unknown leaf cage counts show another
+observed-field dependence: medicinal reports omit cages in 77/82 entire-locality
+events versus 41/82 partial-locality events; non-medicinal reports omit cages in
+85/107 entire-locality events and 0/584 partial-locality events. MAR conditional on
+category and entire_locality is a defensible working hypothesis, inferred rather
+than confirmed; residual MNAR cannot be excluded. We retain missing_unknown because
+the actual reason is undocumented. A zero cage count is not assumed to be a sentinel.
 
 ## 5. Flags and rules
 
@@ -182,24 +203,108 @@ another unit would be speculation.
 
 ## 6. Mapping and identity decisions
 
-**Egemen's section - pending.** Complete the independent text/category/identity and
-treatment investigation, add reviewed CSVs, record exact/normalised/fuzzy-proposal
-match counts and unmatched values. Add Egemen's genuine findings to the issues register.
-Do not insert a fictional identity merge merely to fill a mapping table.
+Investigation: Mehmet Egemen Karagoz's assigned stage, AI-assisted. The executed
+notebook includes the category profile; the full reproducible inventory is
+[m3_category_profile.json](evidence/m3_category_profile.json). Exact matching is tried
+first; NFC/whitespace/case comparison is a proposal key, with explicit Turkish dotted-I
+handling. No fuzzy matching or automatic identity decision is used. Existing source
+IDs remain the identity grain, so name cleaning precedes no assumed identity merge.
+
+| Mapping CSV / table | Rows | Exact source matches | Unmatched | Decision |
+|---|---:|---:|---:|---|
+| [locality_name_mapping](../data/mappings/locality_name_mapping.csv) | 3 | 3 | 0 | Collapse doubled/trailing spaces for specified source IDs |
+| [treatment_value_mapping](../data/mappings/treatment_value_mapping.csv) | 8 | 8 | 0 | Lowercase explicit treatment-type labels; no translation merge |
+| [municipality_name_mapping](../data/mappings/municipality_name_mapping.csv) | 0 | 0 | 0 | Current 5054 spelling already canonical; no historical value invented |
+| [locality_identity_mapping](../data/mappings/locality_identity_mapping.csv) | 0 | 0 | 0 | No evidenced re-registration or merge |
+
+All 11 mapping entries match exactly and affect 3 locality names and 855 event type
+values. Normalisation proposes three whitespace changes and one name collision;
+the explicit CSVs accept the three formatting fixes, never the ID merge. There are
+101 exact duplicate-name groups and 24 same-normalised-name/municipality candidate
+groups, so matching names is demonstrably unsafe as an identity key. Fuzzy proposals
+and accepted identity merges both number zero. Each CSV records decided_by,
+decided_at and a note; empty files deliberately retain headers for reviewed no-change
+decisions. Dates record the decision date, not measurement time.
+
+Substance code 0 is retained with ambiguous_code rather than guessed from the name;
+codes must not be joined to a universal drug dictionary without further evidence.
+Combination reports preserve details_json unchanged, including nested components.
+The 34 wrapper events are not flattened into extra source-grain rows or interpreted
+as 34 additional independent medications. Semantic label translation, treatment
+efficacy and farm stock status are outside the evidence available here. A future
+nonempty identity mapping currently fails safely until resolved statistical grouping
+is implemented, rather than producing incorrect per-entity fences.
+
+Additional category flags: not_applicable means structural absence (34 types, 725
+substance names, 725 substance IDs and 34 cage fields); missing_unknown marks 203
+unknown leaf cage counts; ambiguous_code retains 93 code-zero IDs; mapped records
+only CSV-backed changed values. Weekly boolean fields, registry versions, source IDs,
+report IDs and raw details are otherwise unchanged. Every flag is constrained by CHECK.
 
 ## 7. Counts and validation
 
-**Egemen's section - pending final integration and validate.py.** Cagatay's reproducible
-measurement-stage evidence lives in [m3_measurement_safety.json](evidence/m3_measurement_safety.json),
-[first clean run](evidence/m3_measurements_run1.txt) and
-[second clean run](evidence/m3_measurements_run2.txt). It covers all M2 hashes,
-raw/key preservation, idempotence, rollback, and threshold restoration, but is not a
-replacement for the required validate.py checks or deliberately failing each STOP.
-Final category counts, WARN classifications and final pipeline outputs must be added here.
+Final outputs: [clean run 1](evidence/m3_clean_run1.txt),
+[clean run 2](evidence/m3_clean_run2.txt), [validate](evidence/m3_validate.txt),
+[20 full-build safety checks](evidence/m3_full_safety.json) and
+[STOP/late-failure evidence](evidence/m3_stop_injections.json).
+The two clean outputs are identical. All seven M2 hashes remain unchanged; all six
+clean tables preserve source counts, keys, raw fields and provenance. Row counts are
+371 municipalities, 2,710 localities, 6,951 lice weeks, 10,440 temperature statuses,
+816 treatment weeks and 889 treatment events. All ten clean/mapping tables are STRICT.
+All 11 mapping rows match; no value was imputed.
+
+Validation gives six PASS, five WARN and zero STOP; WARN leaves the exit code zero.
+The 35% elapsed-temperature missingness threshold is a review trigger slightly above
+one third, not a deletion criterion or an empirically optimal boundary. The denominator
+excludes future rows but includes screened-invalid historical measurements. Freshness
+expects the previous ISO week (FRESHNESS_LAG_WEEKS=1), because the retrieval week's
+reporting window is incomplete. These constants are named in validate.py and do not
+alter cleaned data.
+
+| WARN | Observed | Classification and consequence |
+|---|---|---|
+| missing_share | 12/40 localities exceed 35% elapsed NULL temperature | Measurement/coverage limitation; underlying production/reporting mechanism unknown |
+| freshness | 26/40 have usable temperature in 2026-W40; 14 do not | Reporting/real-world coverage uncertainty, not proven pipeline failure; current week 41 deliberately not required |
+| sequence_review | 31 repeated-temperature rows and 5 spikes | Measurement-quality suspicion, not a confirmed fault; all retained |
+| ambiguous_substance_code | 93 medicinal code-zero events | Source identifier ambiguity; retain names and avoid code-only joins |
+| unknown_cages | 203 leaf interventions | Source field omission correlated with entire_locality; do not invent cage totals |
+
+Every STOP was deliberately failed on a disposable copy and returned exit code 1:
+
+| STOP | Deliberate failure |
+|---|---|
+| row_counts | Delete one clean lice row |
+| raw_preservation | Alter one locality_clean.name_raw while leaving the source untouched |
+| impossible_values | Set one cleaned temperature to 1,000 C |
+| foreign_keys | With FK enforcement disabled only on the test copy, insert a lice source row referencing an absent locality |
+| strict_schema | Create a deliberately non-STRICT table in the test copy |
+
+An absent database also produces STOP and exit 1. A failure injected after 22,000
+writes, during treatment-event construction, preserves the prior contents of all
+six clean tables, four mappings and seven M2 tables. The original database is unchanged
+by these injections. First-build DDL rollback, repeated builds, raw copying, calendar
+branches and IQR change/restore are separately covered by the 20-check safety script.
+Earlier measurement-stage evidence files are retained as historical intermediate
+outputs; they are not the final submission outputs.
 
 ## 8. What we can't say
 
-**Egemen's section - pending.** Incorporate the measurement limitations above and your
-own category/identity findings. No confirmed sensor diagnosis, missingness mechanism,
-automatic entity merge, no-treatment interpretation, or causal temperature/lice
-relationship has been established by Cagatay's measurement work.
+Cleaning does not establish the true cause of a spike, zero interval, long plateau
+or missing report. The metadata use M2's latest-value policy, so historical renaming,
+movement and ID recycling cannot be excluded. Repeated names cannot prove identity;
+the absence of an accepted merge is a conservative decision, not proof that all IDs
+are stable forever. M2 lacks the logs, stock-status history and coordinates needed
+to resolve many such questions.
+
+No treatment row cannot safely be read as no treatment; 39 of the 40 cohort localities
+have treatment weeks, and the absent locality's reporting/production status is unknown.
+Unknown cage counts prevent reliable totals of treated cages. Nested combination
+payloads require an explicitly chosen analytical grain before M4 aggregation.
+Case normalisation does not prove semantic equivalence between Norwegian and English
+treatment labels, and code 0 cannot identify a substance alone.
+
+M4 must disclose coverage denominators, separate future placeholders, join calendar
+weeks explicitly and retain sensitivity to flag thresholds. Flagged-but-kept values
+are candidates for inspection, not automatic exclusions. This milestone supplies
+traceable measurements and NULL where rejected, without filling gaps or estimating
+a temperature/lice effect, a legal exceedance rate, or predictive performance.

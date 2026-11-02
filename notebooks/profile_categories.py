@@ -14,7 +14,8 @@ from db import DB_PATH, connect, snapshot
 
 def normal_key(value):
     # Comparison/proposal key only. Never writes a canonical name or merges IDs.
-    return ' '.join(unicodedata.normalize('NFC', value).split()).casefold()
+    normalized = unicodedata.normalize('NFC', value).translate(str.maketrans({'İ':'i','ı':'i'}))
+    return ' '.join(normalized.split()).casefold()
 
 
 def profile_categories(db_path=DB_PATH):
@@ -67,10 +68,19 @@ def profile_categories(db_path=DB_PATH):
         for row in treatment:
             if row[6] is not None:
                 code_names[row[6]].add(row[5])
+        per_locality = {}
+        for key in sorted({r[0] for r in treatment}):
+            rows = [r for r in treatment if r[0]==key]
+            cages = [r[7] for r in rows if r[7] is not None]
+            number = con.execute('SELECT locality_no FROM locality WHERE locality_key=?',(key,)).fetchone()[0]
+            per_locality[number] = {'events':len(rows),'missing_cages':sum(r[7] is None for r in rows),
+                'cages_min_median_max':[min(cages),median(cages),max(cages)] if cages else None,
+                'first_week':min((r[1],r[2]) for r in rows),'last_week':max((r[1],r[2]) for r in rows)}
         result = {'text':text, 'duplicate_exact_name_groups':len(duplicates),
                   'duplicate_exact_name_examples':duplicates[:15],
                   'same_normalized_name_and_municipality_candidates':identity_candidates,
                   'treatment_by_category':per_category,
+                  'treatment_by_locality':per_locality,
                   'substance_code_names':{k:sorted(v) for k,v in sorted(code_names.items())},
                   'weekly_flags':con.execute('SELECT mechanical_removal, mechanical_removal_entire_locality, COUNT(*) FROM treatment_weekly GROUP BY 1,2').fetchall(),
                   'treatment_periods':con.execute('SELECT l.locality_no, MIN(t.year*100+t.week), MAX(t.year*100+t.week), COUNT(*) FROM treatment_weekly t JOIN locality l USING(locality_key) GROUP BY l.locality_no ORDER BY l.locality_no').fetchall(),

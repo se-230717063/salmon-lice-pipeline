@@ -205,7 +205,41 @@ ORDER BY FLOOR(t.sea_temperature / 2.0);
 ---
 
 ## Status
-M2 — schema and load complete
+M3 — cleaned layer and quality report complete. Submission tag pending explicit team approval.
+
+## Data Quality (M3)
+
+The cleaned layer preserves every M2 row, key and raw measurement while flagging data-quality issues.
+It distinguishes 2,754 historical temperature non-reports from 480 future placeholders and rejects one
+196.18 °C measurement without imputing it. Unusual lice counts, repeated temperatures and spikes are
+flagged and retained; CSV-backed mappings standardise three locality names and treatment-type case.
+The [cleaning report](docs/cleaning_report.md) documents evidence, rules, five remaining WARNs and limitations.
+
+From a fresh clone, first obtain the landed raw files as described above, install requirements, then run:
+
+```bash
+python src/load.py
+python src/clean.py
+python src/validate.py
+```
+
+`validate.py` reports PASS/WARN/STOP and exits non-zero on STOP. Current data have six PASS,
+five WARN and no STOP; WARNs concern coverage, suspicious sequences and incomplete treatment metadata.
+Reproduce the profile in [notebooks/m3_profile.ipynb](notebooks/m3_profile.ipynb), committed with outputs;
+the code cells use the standard library and run from the repository root or notebooks directory.
+An existing Jupyter environment with a Python kernel can open it; Jupyter is not a pipeline dependency.
+
+```bash
+python notebooks/check_m3_safety.py
+python notebooks/check_m3_validation.py
+```
+
+These scripts use disposable databases to prove idempotence, full-layer rollback, unchanged M2 hashes,
+and deliberately failing STOP checks. Final run outputs are under [docs/evidence](docs/evidence).
+M3 adds `sql/clean_schema.sql`, `src/clean*.py`, `src/validate.py`, reviewed CSVs in `data/mappings/`,
+the profile notebook and the cleaning report. Neither the database nor the submission raw ZIP belongs in Git.
+`python notebooks/package_m3.py` prepares the ignored local `output/m3_submission/` folder with the
+database, raw ZIP, final outputs, repository URL and checksum manifest; it does not tag or upload anything.
 
 ## Team
 - Çağatay Oruk (GitHub: se-230717041)

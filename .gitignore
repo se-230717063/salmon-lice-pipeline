@@ -39,3 +39,6 @@ salmon-lice-pipeline/
 
 # Rebuilds and temporary copies used for M3 safety proofs
 tmp/m3/
+
+# Local M3 submission bundle (database, raw ZIP, logs and manifest)
+output/m3_submission/
