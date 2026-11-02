@@ -1,7 +1,6 @@
 -- M3. M2 schema.sql and all M2 rows remain untouched.
 -- All six cleaned tables preserve their own source grain and primary key.
--- Category tables are the contract for Egemen's build_categories extension;
--- they remain empty until that stage is implemented. This is NOT a final M3 build.
+-- Reviewed CSV mappings and clean_categories.py build all category tables.
 
 CREATE TABLE IF NOT EXISTS lice_weekly_clean (
     locality_key INTEGER NOT NULL REFERENCES locality(locality_key),
@@ -127,16 +126,16 @@ CREATE TABLE IF NOT EXISTS treatment_event_clean (
     source_event_id INTEGER,
     treatment_type_raw TEXT,
     treatment_type TEXT,
-    treatment_type_flag TEXT NOT NULL CHECK (treatment_type_flag IN ('ok', 'missing_unknown', 'mapped', 'unmatched')),
+    treatment_type_flag TEXT NOT NULL CHECK (treatment_type_flag IN ('ok', 'missing_unknown', 'not_applicable', 'mapped', 'unmatched')),
     substance_name_raw TEXT,
     substance_name TEXT,
-    substance_name_flag TEXT NOT NULL CHECK (substance_name_flag IN ('ok', 'missing_unknown', 'mapped', 'unmatched')),
+    substance_name_flag TEXT NOT NULL CHECK (substance_name_flag IN ('ok', 'missing_unknown', 'not_applicable', 'mapped', 'unmatched')),
     substance_id_raw TEXT,
     substance_id TEXT,
-    substance_id_flag TEXT NOT NULL CHECK (substance_id_flag IN ('ok', 'missing_unknown', 'mapped', 'unmatched')),
+    substance_id_flag TEXT NOT NULL CHECK (substance_id_flag IN ('ok', 'missing_unknown', 'not_applicable', 'ambiguous_code', 'mapped', 'unmatched')),
     number_of_cages_raw INTEGER,
     number_of_cages INTEGER,
-    number_of_cages_flag TEXT NOT NULL CHECK (number_of_cages_flag IN ('ok', 'missing_unknown', 'invalid_negative')),
+    number_of_cages_flag TEXT NOT NULL CHECK (number_of_cages_flag IN ('ok', 'missing_unknown', 'not_applicable', 'invalid_negative')),
     entire_locality INTEGER CHECK (entire_locality IN (0, 1)),
     done_before_lice_count INTEGER CHECK (done_before_lice_count IN (0, 1)),
     lice_report_id TEXT,

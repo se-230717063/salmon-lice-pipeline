@@ -1,4 +1,4 @@
-"""M3 orchestrator. Measurements implemented; category stage is Egemen's handoff.
+"""M3 orchestrator: atomic measurement, category and mapping rebuild.
 
 Reads only M2 tables. Rebuilds clean tables in one explicit transaction, including
 transactional DDL. No executescript(): sqlite3 would commit before that call.
@@ -19,6 +19,14 @@ INSERT_TEMP = "INSERT INTO sea_temperature_weekly_clean (locality_key, year, wee
 CLEAN_SNAPSHOT_SQL = {
     "lice_weekly_clean": "SELECT * FROM lice_weekly_clean ORDER BY locality_key, year, week",
     "sea_temperature_weekly_clean": "SELECT * FROM sea_temperature_weekly_clean ORDER BY locality_key, year, week",
+    "municipality_clean": "SELECT * FROM municipality_clean ORDER BY municipality_key",
+    "locality_clean": "SELECT * FROM locality_clean ORDER BY locality_key",
+    "treatment_weekly_clean": "SELECT * FROM treatment_weekly_clean ORDER BY locality_key, year, week",
+    "treatment_event_clean": "SELECT * FROM treatment_event_clean ORDER BY locality_key, year, week, category, event_seq",
+    "municipality_name_mapping": "SELECT * FROM municipality_name_mapping ORDER BY municipality_no, raw_name",
+    "locality_name_mapping": "SELECT * FROM locality_name_mapping ORDER BY locality_no, raw_name",
+    "treatment_value_mapping": "SELECT * FROM treatment_value_mapping ORDER BY field, raw_value",
+    "locality_identity_mapping": "SELECT * FROM locality_identity_mapping ORDER BY source_locality_no",
 }
 
 
@@ -51,10 +59,16 @@ def run_clean(db_path=DB_PATH, *, fail_after_rows=None, quiet=False, require_cat
     if not Path(db_path).is_file():
         raise FileNotFoundError("M2 database not found; run python src/load.py first")
     builder = category_builder()
-    if require_categories and builder is None:
+    if builder is None:
         raise RuntimeError("Category stage missing: Egemen must implement clean_categories.build_categories")
     con = connect(db_path)
     count = 0
+
+    def tick():
+        nonlocal count
+        count += 1
+        if fail_after_rows is not None and count >= fail_after_rows:
+            raise SimulatedCleanFailure("Intentional failure during cleaned-layer writes")
     try:
         # Read and write under one transaction for a consistent M2 snapshot.
         con.execute("BEGIN IMMEDIATE")
@@ -62,6 +76,9 @@ def run_clean(db_path=DB_PATH, *, fail_after_rows=None, quiet=False, require_cat
             before = snapshot(con)
             lice, lice_flags = clean_rows(con.execute(SELECT_LICE).fetchall(), "lice")
             temperature, temp_flags = clean_rows(con.execute(SELECT_TEMP).fetchall(), "temperature")
+            # Transactional migration of the clean-only event flag vocabulary.
+            # Source treatment_event is never dropped or modified.
+            con.execute("DROP TABLE IF EXISTS treatment_event_clean")
             for statement in schema_statements():
                 con.execute(statement)
             con.execute("DELETE FROM lice_weekly_clean")
@@ -69,10 +86,8 @@ def run_clean(db_path=DB_PATH, *, fail_after_rows=None, quiet=False, require_cat
             for sql, rows in ((INSERT_LICE, lice), (INSERT_TEMP, temperature)):
                 for row in rows:
                     con.execute(sql, row)
-                    count += 1
-                    if fail_after_rows is not None and count >= fail_after_rows:
-                        raise SimulatedCleanFailure("Intentional failure during cleaned-layer writes")
-            categories = builder(con, ROOT / "data/mappings") if builder else None
+                    tick()
+            categories = builder(con, ROOT / "data/mappings", tick=tick)
             if snapshot(con) != before:
                 raise RuntimeError("M2 contents changed; rolling back the entire clean build")
             if con.execute("PRAGMA foreign_key_check").fetchall():
