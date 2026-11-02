@@ -1,0 +1,47 @@
+﻿[
+  {
+    "check": "row_counts",
+    "result": "PASS",
+    "exit_code": 1,
+    "observed": "STOP row_counts {'lice_weekly_clean': (6951, 6950)}"
+  },
+  {
+    "check": "raw_preservation",
+    "result": "PASS",
+    "exit_code": 1,
+    "observed": "STOP raw_preservation Changed keys/raw/provenance: ['locality_clean']"
+  },
+  {
+    "check": "impossible_values",
+    "result": "PASS",
+    "exit_code": 1,
+    "observed": "STOP impossible_values {'negative_lice': 0, 'temperature_range': 1, 'negative_cages': 0, 'invalid_flag_with_value': 0, 'lice_invalid_flag_with_value': 0, 'calendar_or_future_values': 0}"
+  },
+  {
+    "check": "foreign_keys",
+    "result": "PASS",
+    "exit_code": 1,
+    "observed": "STOP foreign_keys [('lice_weekly', 6952, 'locality', 0)]"
+  },
+  {
+    "check": "strict_schema",
+    "result": "PASS",
+    "exit_code": 1,
+    "observed": "STOP strict_schema Non-STRICT tables: ['deliberately_non_strict']"
+  },
+  {
+    "check": "database_read",
+    "result": "PASS",
+    "exit_code": 1,
+    "observed": "STOP database_read unable to open database file"
+  },
+  {
+    "check": "late_category_atomicity",
+    "result": "PASS",
+    "detail": "Failure after 22000 writes preserves all six clean tables, four mappings and seven M2 tables"
+  },
+  {
+    "check": "original_untouched",
+    "result": "PASS"
+  }
+]

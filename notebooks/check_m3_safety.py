@@ -1,4 +1,4 @@
-"""Reproducible safety evidence for Cagatay's measurement stage, on disposable DBs.
+"""Reproducible full M3 build safety evidence, on disposable DBs.
 
 Not a replacement for Egemen's required validate.py or its STOP injection tests.
 Run: python notebooks/check_m3_safety.py
@@ -140,8 +140,8 @@ def run_checks():
         verify(all(r[5] == "ok" for r in rows), "missing week breaks exact-value runs", results)
         rows, _ = clean_rows([(1, 2026, w, 0., stamp) for w in range(1, 8)], "lice")
         verify(all(r[4] == 0. and r[5] == "ok" for r in rows), "repeated zero lice counts are not labelled sensor faults", results)
-        return {"scope": "Cagatay measurement stage only; category stage and validate.py pending",
-                "checks": results, "m2_hashes": baseline, "measurement_hashes": before, "clean_result": first}
+        return {"scope": "Full cleaned and mapping layer; STOP injections are in check_m3_validation.py",
+                "checks": results, "m2_hashes": baseline, "clean_and_mapping_hashes": before, "clean_result": first}
 
 
 if __name__ == "__main__":
