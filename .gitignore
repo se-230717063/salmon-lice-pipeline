@@ -36,3 +36,6 @@ checks_output.txt
 *.pdf
 m1 repo url.txt
 salmon-lice-pipeline/
+
+# Rebuilds and temporary copies used for M3 safety proofs
+tmp/m3/
