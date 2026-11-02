@@ -1,0 +1,14 @@
+﻿lice_weekly_clean: 6951 rows (same as M2)
+  ok: 6813
+  unusual_high: 138
+sea_temperature_weekly_clean: 10440 rows (same as M2)
+  future_placeholder: 480
+  invalid_range: 1
+  missing_not_reported: 2754
+  ok: 7164
+  suspect_spike: 5
+  suspect_stuck: 31
+  unusual_low: 5
+M2 contents: UNCHANGED; foreign_key_check: OK
+categories: PENDING - clean_categories.py not implemented
+STATUS: MEASUREMENTS COMPLETE; M3 INCOMPLETE (category stage and validation pending)

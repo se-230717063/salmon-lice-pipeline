@@ -4,13 +4,14 @@ from collections import Counter, defaultdict
 from datetime import date, datetime, timedelta
 import json
 from pathlib import Path
-import sqlite3
 from statistics import median
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
+PROFILE_LEVEL_WINDOW_WEEKS = 4  # Compare adjacent four-week medians; review only.
+PROFILE_LEVEL_SHIFT_C = 8.0  # Broad persistent-shift candidate threshold; not a unit correction.
 sys.path.insert(0, str(ROOT / "src"))
-from db import DB_PATH, snapshot
+from db import DB_PATH, connect, snapshot
 
 MEASUREMENTS = {
     "lice_weekly": "SELECT locality_key, year, week, avg_adult_female_lice, retrieved_at FROM lice_weekly ORDER BY locality_key, year, week",
@@ -29,7 +30,7 @@ def quantile(values, fraction):
 
 
 def profile(db_path=DB_PATH):
-    con = sqlite3.connect(Path(db_path).resolve().as_uri() + "?mode=ro", uri=True)
+    con = connect(db_path, read_only=True)
     try:
         result = {"m2_snapshot": snapshot(con), "foreign_key_violations": con.execute("PRAGMA foreign_key_check").fetchall()}
         names = dict(con.execute("SELECT locality_key, locality_no FROM locality"))
@@ -48,6 +49,7 @@ def profile(db_path=DB_PATH):
                 invalid_iso = 0
                 runs, current, longest = [], [], 0
                 jumps = []
+                level_shifts = []
                 for row in records:
                     try:
                         day = date.fromisocalendar(row[1], row[2], 1)
@@ -73,6 +75,18 @@ def profile(db_path=DB_PATH):
                 for previous, following in zip(observed_dates, observed_dates[1:]):
                     if following[0] - previous[0] == timedelta(days=7) and previous[1] is not None and following[1] is not None:
                         jumps.append([abs(following[1] - previous[1]), str(following[0]), previous[1], following[1]])
+                if table == "sea_temperature_weekly":
+                    window = PROFILE_LEVEL_WINDOW_WEEKS
+                    for index in range(window, len(observed_dates)-window+1):
+                        block = observed_dates[index-window:index+window]
+                        if any(v is None or not -5 <= v <= 40 for _, v in block):
+                            continue
+                        if any(b[0]-a[0] != timedelta(days=7) for a, b in zip(block, block[1:])):
+                            continue
+                        left = median(v for _, v in block[:window])
+                        right = median(v for _, v in block[window:])
+                        if abs(left-right) >= PROFILE_LEVEL_SHIFT_C:
+                            level_shifts.append([str(block[window][0]), left, right])
                 expected = (max(d for d, _ in observed_dates) - min(d for d, _ in observed_dates)).days // 7 + 1 if observed_dates else 0
                 historical_nulls = sum(v is None for _, v in observed_dates)
                 entities.append({"locality_no": names[key], "rows": len(records), "nulls": len(records)-len(values),
@@ -83,7 +97,8 @@ def profile(db_path=DB_PATH):
                     "absent_weeks_between_first_last": expected-len(observed_dates), "historical_nulls": historical_nulls,
                     "historical_null_share": historical_nulls / len(observed_dates) if observed_dates else None,
                     "future_rows": future, "invalid_iso_weeks": invalid_iso, "longest_exact_run": longest,
-                    "runs_at_least_6": runs, "largest_adjacent_jumps": sorted(jumps, reverse=True)[:5]})
+                    "runs_at_least_6": runs, "largest_adjacent_jumps": sorted(jumps, reverse=True)[:5],
+                    "level_shift_candidates": level_shifts})
                 for row in records:
                     if row[3] is not None and (row[3] < 0 if table == "lice_weekly" else not -5 <= row[3] <= 40):
                         invalid_examples.append([names[key], row[1], row[2], row[3]])
@@ -95,6 +110,15 @@ def profile(db_path=DB_PATH):
                 "screening_invalid_examples": invalid_examples, "future_examples": future_examples,
                 "per_year": per_year, "per_entity": entities}
         result["temperature_reporting_states"] = con.execute("SELECT has_reported, sea_temperature IS NULL, COUNT(*) FROM sea_temperature_weekly GROUP BY has_reported, sea_temperature IS NULL").fetchall()
+        joint = Counter()
+        for year, week, stamp, reported, absent in con.execute("SELECT t.year, t.week, t.retrieved_at, t.has_reported, l.week IS NULL FROM sea_temperature_weekly t LEFT JOIN lice_weekly l USING(locality_key, year, week)"):
+            try:
+                day = date.fromisocalendar(year, week, 1)
+            except ValueError:
+                continue
+            if day <= datetime.fromisoformat(stamp.replace("Z", "+00:00")).date():
+                joint[(reported, absent)] += 1
+        result["joint_historical_reporting"] = [[*key, count] for key, count in sorted(joint.items())]
         # These inventories are evidence for Egemen, not mapping or identity decisions.
         result["category_inventory_for_egemen"] = {}
         for label, sql in {

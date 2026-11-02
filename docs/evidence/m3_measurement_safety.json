@@ -1,0 +1,145 @@
+﻿{
+  "scope": "Cagatay measurement stage only; category stage and validate.py pending",
+  "checks": [
+    {
+      "check": "notebook executes top-to-bottom on fresh M2 without clean tables",
+      "result": "PASS"
+    },
+    {
+      "check": "fresh M2 rebuild matches existing M2 contents",
+      "result": "PASS"
+    },
+    {
+      "check": "first-build failure preserves all M2 hashes",
+      "result": "PASS"
+    },
+    {
+      "check": "first-build failure rolls back clean schema as well as rows",
+      "result": "PASS"
+    },
+    {
+      "check": "successful clean preserves all seven M2 hashes",
+      "result": "PASS"
+    },
+    {
+      "check": "lice preserves every key, row and raw value",
+      "result": "PASS"
+    },
+    {
+      "check": "temperature preserves every key, row and raw value",
+      "result": "PASS"
+    },
+    {
+      "check": "all declared foreign keys resolve",
+      "result": "PASS"
+    },
+    {
+      "check": "all M2 and M3 tables are STRICT",
+      "result": "PASS"
+    },
+    {
+      "check": "no screened impossible temperature survives",
+      "result": "PASS"
+    },
+    {
+      "check": "no negative cleaned lice count survives",
+      "result": "PASS"
+    },
+    {
+      "check": "unusual and sequentially suspect measurements are retained unchanged",
+      "result": "PASS"
+    },
+    {
+      "check": "second build has identical measurement contents",
+      "result": "PASS"
+    },
+    {
+      "check": "failed rebuild preserves previous cleaned contents and M2",
+      "result": "PASS"
+    },
+    {
+      "check": "changing IQR multiplier changes flag output",
+      "result": "PASS"
+    },
+    {
+      "check": "IQR sensitivity changes only IQR flags, not measurements or other flags",
+      "result": "PASS"
+    },
+    {
+      "check": "restoring IQR multiplier restores exact contents",
+      "result": "PASS"
+    },
+    {
+      "check": "calendar, future and contradictory-field branches reject suspect values",
+      "result": "PASS"
+    },
+    {
+      "check": "missing week breaks exact-value runs",
+      "result": "PASS"
+    },
+    {
+      "check": "repeated zero lice counts are not labelled sensor faults",
+      "result": "PASS"
+    }
+  ],
+  "m2_hashes": {
+    "municipality": [
+      371,
+      "b2b6bca5a4b276092dc34a815a4d81a0b3514bc105bc756dd458d252ec26ed99"
+    ],
+    "locality": [
+      2710,
+      "9a93afdbad6aa8efd002151650467911abf2bb722fe4847b1eaa3b3a2154041b"
+    ],
+    "lice_weekly": [
+      6951,
+      "1063d99d5a96ddb0182df9a182595385ad46227114ba615b49acb0b45586c007"
+    ],
+    "sea_temperature_weekly": [
+      10440,
+      "e32aacaff66b7818582805fdd5be9723f4e4dfd68e583f6915211a9a701370d8"
+    ],
+    "treatment_weekly": [
+      816,
+      "9ad4e7dc2751f40a1a5bf822bdcfb8e080ead475b8269a90a80b90f7cada0db1"
+    ],
+    "treatment_event": [
+      889,
+      "0decd245968d7d5ec7a42fe0e1a5726684e59c79afc57fd14e48024489dfbdfb"
+    ],
+    "quarantine": [
+      0,
+      "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ]
+  },
+  "measurement_hashes": {
+    "lice_weekly_clean": "ae91b67201389c5004094edc333b97c439414044f260fc3b5876b03e3e2d279b",
+    "sea_temperature_weekly_clean": "948f917747d3dc2f239f04f64115fdf4a22c8b61ea224bf082d9464d87ae97b6"
+  },
+  "clean_result": {
+    "measurements": {
+      "lice_weekly_clean": {
+        "rows": 6951,
+        "flags": {
+          "ok": 6813,
+          "unusual_high": 138
+        }
+      },
+      "sea_temperature_weekly_clean": {
+        "rows": 10440,
+        "flags": {
+          "future_placeholder": 480,
+          "invalid_range": 1,
+          "missing_not_reported": 2754,
+          "ok": 7164,
+          "suspect_spike": 5,
+          "suspect_stuck": 31,
+          "unusual_low": 5
+        }
+      }
+    },
+    "m2_unchanged": true,
+    "categories": null,
+    "category_stage": "pending"
+  }
+}

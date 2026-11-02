@@ -18,6 +18,49 @@ CREATE TABLE IF NOT EXISTS lice_weekly_clean (
     FOREIGN KEY (locality_key, year, week) REFERENCES lice_weekly(locality_key, year, week)
 ) STRICT;
 
+-- Mapping contracts: Egemen supplies reviewed CSV rows, never Python dictionaries.
+-- Natural source identifiers in CSVs remain stable across database rebuilds.
+CREATE TABLE IF NOT EXISTS municipality_name_mapping (
+    municipality_no TEXT NOT NULL REFERENCES municipality(municipality_no),
+    raw_name TEXT NOT NULL,
+    clean_name TEXT NOT NULL,
+    decided_by TEXT NOT NULL,
+    decided_at TEXT NOT NULL,
+    note TEXT NOT NULL,
+    PRIMARY KEY (municipality_no, raw_name)
+) STRICT;
+
+CREATE TABLE IF NOT EXISTS locality_name_mapping (
+    locality_no INTEGER NOT NULL REFERENCES locality(locality_no),
+    raw_name TEXT NOT NULL,
+    clean_name TEXT NOT NULL,
+    decided_by TEXT NOT NULL,
+    decided_at TEXT NOT NULL,
+    note TEXT NOT NULL,
+    PRIMARY KEY (locality_no, raw_name)
+) STRICT;
+
+-- Global vocabulary decisions do not refer to a single locality, so no entity FK applies.
+CREATE TABLE IF NOT EXISTS treatment_value_mapping (
+    field TEXT NOT NULL CHECK (field IN ('category', 'treatment_type', 'substance_name', 'substance_id')),
+    raw_value TEXT NOT NULL,
+    clean_value TEXT NOT NULL,
+    decided_by TEXT NOT NULL,
+    decided_at TEXT NOT NULL,
+    note TEXT NOT NULL,
+    PRIMARY KEY (field, raw_value)
+) STRICT;
+
+-- Populate only if identity evidence exists; no merges have been assumed in this stage.
+CREATE TABLE IF NOT EXISTS locality_identity_mapping (
+    source_locality_no INTEGER PRIMARY KEY REFERENCES locality(locality_no),
+    canonical_locality_no INTEGER NOT NULL REFERENCES locality(locality_no),
+    decided_by TEXT NOT NULL,
+    decided_at TEXT NOT NULL,
+    note TEXT NOT NULL,
+    CHECK (source_locality_no != canonical_locality_no)
+) STRICT;
+
 CREATE TABLE IF NOT EXISTS sea_temperature_weekly_clean (
     locality_key INTEGER NOT NULL REFERENCES locality(locality_key),
     year INTEGER NOT NULL,
