@@ -1,0 +1,4 @@
+locality_no,raw_name,clean_name,decided_by,decided_at,note
+11743,Ivarsholmen  Ø,Ivarsholmen Ø,Mehmet Egemen Karagoz (AI-assisted),2026-11-02,M2 repr inventory shows a doubled internal space; collapse whitespace without changing locality identity
+45246,Brønnøyskjæran ,Brønnøyskjæran,Mehmet Egemen Karagoz (AI-assisted),2026-11-02,M2 repr inventory shows one trailing space; another locality shares the trimmed name so do not merge IDs
+45276,Slåtterøya 2 ,Slåtterøya 2,Mehmet Egemen Karagoz (AI-assisted),2026-11-02,M2 repr inventory shows one trailing space; preserve source locality number

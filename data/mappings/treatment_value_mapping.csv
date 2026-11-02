@@ -1,0 +1,9 @@
+field,raw_value,clean_value,decided_by,decided_at,note
+treatment_type,ANNEN_BEHANDLING,annen_behandling,Mehmet Egemen Karagoz (AI-assisted),2026-11-02,Case standardisation only; preserve Norwegian vocabulary and do not infer equivalence with other labels
+treatment_type,BADEBEHANDLING,badebehandling,Mehmet Egemen Karagoz (AI-assisted),2026-11-02,Case standardisation only; not merged with Bath without provider evidence
+treatment_type,Bath,bath,Mehmet Egemen Karagoz (AI-assisted),2026-11-02,Case standardisation only; source vocabulary remains distinguishable
+treatment_type,FERSKVANNSBEHANDLING,ferskvannsbehandling,Mehmet Egemen Karagoz (AI-assisted),2026-11-02,Case standardisation only; no treatment efficacy or unit conversion inferred
+treatment_type,FORBEHANDLING,forbehandling,Mehmet Egemen Karagoz (AI-assisted),2026-11-02,Case standardisation only; not merged with InFeed without provider evidence
+treatment_type,InFeed,infeed,Mehmet Egemen Karagoz (AI-assisted),2026-11-02,Case standardisation only; preserve original vocabulary without translation
+treatment_type,MEKANISK_BEHANDLING,mekanisk_behandling,Mehmet Egemen Karagoz (AI-assisted),2026-11-02,Case standardisation only; weekly mechanical flag is a separate source field
+treatment_type,TERMISK_BEHANDLING,termisk_behandling,Mehmet Egemen Karagoz (AI-assisted),2026-11-02,Case standardisation only; no conversion or cross-category merge
