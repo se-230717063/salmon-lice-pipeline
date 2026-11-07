@@ -30,6 +30,16 @@ class Parameters:
     temperature_edges: tuple = (-5., 4., 8., 12., 16., 20., 40.)  # Contract for later E-stage inspection, not a fitted choice.
     seed: int = 42
     bootstrap_replicates: int = 2000  # Reserved for Egemen's stage; no interval computed by Cagatay.
+    min_time_farms: int = 20  # Half the cohort for a weekly pooled time point.
+    time_block_weeks: int = 13  # Four source-week blocks per complete ISO year.
+    min_block_coverage: float = 0.5  # Descriptive block plots require half the calendar opportunities.
+    spring_windows: tuple = ((16,21),(21,26))  # Calendar annotations; no farm-specific legal regime assigned.
+    relationship_bin_c: float = 2.0
+    upper_tail_quantile: float = 0.99  # Influence diagnostic, not data cleaning.
+    cold_range_c: tuple = (4.,8.)  # Fixed half-open regimes selected before comparison results.
+    warm_range_c: tuple = (12.,16.)
+    min_regime_weeks: int = 6  # Require six matched reports in each regime per farm-year.
+    min_overlap_farms: int = 3  # Common-week diagnostic requires three farms in each regime.
 
 
 def default_parameters():

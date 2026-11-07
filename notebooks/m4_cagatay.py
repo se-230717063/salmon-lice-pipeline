@@ -2,8 +2,8 @@
 # # M4 exploration - Cagatay stage
 # Question: how often do reported cohort weeks reach fixed adult-female lice thresholds,
 # and how much do the answer and farm rankings depend on coverage, summaries and flags?
-# This stage covers M4 sections 2.1-2.4. Egemen's time, relationship and interval analyses
-# are pending. Fixed 0.2/0.5 thresholds are analytical, not farm-specific legal limits.
+# This source covers M4 sections 2.1-2.4 and is followed by Egemen's sections 2.5-2.7.
+# Fixed 0.2/0.5 thresholds are analytical, not farm-specific legal limits.
 # %%
 from pathlib import Path
 from dataclasses import asdict
@@ -29,6 +29,9 @@ PARAMS = Parameters(
     strict_temperature_flags=('ok',), min_coverage=0.75,
     histogram_widths=(0.05,0.1,0.2), selected_histogram_width=0.1,
     temperature_edges=(-5.,4.,8.,12.,16.,20.,40.), seed=42, bootstrap_replicates=2000,
+    min_time_farms=20, time_block_weeks=13, min_block_coverage=0.5,
+    spring_windows=((16,21),(21,26)), relationship_bin_c=2.0, upper_tail_quantile=0.99,
+    cold_range_c=(4.,8.), warm_range_c=(12.,16.), min_regime_weeks=6, min_overlap_farms=3,
 )
 DB_PATH = Path(os.environ.get('M4_DB_PATH',str(ROOT/'data/salmon_lice.db')))
 FIGURE_DIR = Path(os.environ.get('M4_FIGURE_DIR',str(ROOT/'figures')))
@@ -40,7 +43,7 @@ style()
 con = connect_ro(DB_PATH)
 before = snapshot_all(con)
 look_log = LookLog()
-results = {'parameters':asdict(PARAMS),'scope':'Cagatay sections 2.1-2.4; Egemen sections pending'}
+results = {'parameters':asdict(PARAMS),'scope':'Full M4 exploration, sections 2.1-2.7'}
 flag_caption = ' + '.join(PARAMS.primary_lice_flags)
 period_caption = str(PARAMS.start_year)+'-'+str(PARAMS.end_year)
 threshold_caption = ' and '.join(str(t) for t in PARAMS.thresholds)
@@ -48,7 +51,7 @@ coverage_label = f'{100*PARAMS.min_coverage:g}%'
 print(json.dumps(asdict(PARAMS),indent=2))
 print('Read-only database; initial table hashes:',len(before))
 print('Primary period: complete source years 2022-2025; source year/week assumed ISO.')
-print('Main groups: locality and year; temperature bands reserved for Egemen, no inferred county groups.')
+print('Main groups: locality, year and configured temperature bands; no inferred county groups.')
 print('Available-report summaries have no minimum coverage; comparative farm summaries require >=75% per farm-year.')
 # %% [markdown]
 # ## 2.1 Raw versus cleaned: the same question and explicit denominators
