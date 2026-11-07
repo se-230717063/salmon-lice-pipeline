@@ -72,8 +72,11 @@ def verify():
             if not expected.is_file() or hashlib.sha256(expected.read_bytes()).hexdigest()!=digest:
                 raise RuntimeError('Regenerated figure differs: '+path.name)
             figure_checks[path.name] = digest
-        if len(figure_checks)!=3 and not (ROOT/'notebooks/m4_egemen.py').exists():
-            raise RuntimeError('Expected Cagatay stage to generate exactly three figures')
+        full_stage=(ROOT/'notebooks/m4_egemen.py').exists()
+        if (full_stage and not 4<=len(figure_checks)<=8) or (not full_stage and len(figure_checks)!=3):
+            raise RuntimeError('Unexpected figure count for the current stage')
+        if set(figure_checks)!={path.name for path in (ROOT/'figures').glob('*.png')}:
+            raise RuntimeError('Workspace contains a figure not reproduced by the notebook')
         sql_problems = []
         paths = list((ROOT/'src').glob('*.py'))+list((ROOT/'notebooks').glob('*.py'))
         for path in paths:
@@ -87,7 +90,7 @@ def verify():
         source.close()
         if not unchanged_original:
             raise RuntimeError('Original database changed during verification')
-        result = {'scope':'Cagatay sections 2.1-2.4 only; Egemen stage pending',
+        result = {'scope':'Full M4 exploration' if full_stage else 'Cagatay sections 2.1-2.4',
                   'fresh_notebook_exit_code':completed.returncode,'all_17_table_hashes_unchanged':before==after,
                   'workspace_database_unchanged':unchanged_original,'fresh_results_match':current==rebuilt,
                   'read_only_write_attempts_rejected':len(rejected),'figure_sha256':figure_checks,
@@ -95,6 +98,7 @@ def verify():
                   'fresh_before':before,'fresh_after':after,
                   'versions':{name:importlib.metadata.version(name) for name in ('numpy','scipy','matplotlib','nbformat','nbclient','nbconvert','ipykernel')}}
         (ROOT/'docs/evidence/m4_cagatay_verification.json').write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+        (ROOT/'docs/evidence/m4_verification.json').write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
         return {key:result[key] for key in ('fresh_notebook_exit_code','all_17_table_hashes_unchanged','fresh_results_match','read_only_write_attempts_rejected','figure_sha256')}
 
 

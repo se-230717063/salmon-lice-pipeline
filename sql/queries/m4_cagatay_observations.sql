@@ -1,6 +1,6 @@
 -- Grain: one lice-report locality/year/week. No temperature or treatment join changes the grain.
 -- Flag filter: flags_json, explicitly supplied by each caller; NULL measurements excluded.
--- Clock: source year/week, assumed ISO pending source-clock review in Egemen's stage.
+-- Clock: stored source year/week; ISO Monday display convention documented in m4_calendar_sources.md.
 SELECT l.locality_no, c.year, c.week, c.avg_adult_female_lice AS value,
        c.avg_adult_female_lice_flag AS flag
 FROM lice_weekly_clean c

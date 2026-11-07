@@ -1,5 +1,5 @@
 # %% [markdown]
-# # M4 exploration - Cagatay stage
+# # M4 exploration - Salmon lice pipeline
 # Question: how often do reported cohort weeks reach fixed adult-female lice thresholds,
 # and how much do the answer and farm rankings depend on coverage, summaries and flags?
 # This source covers M4 sections 2.1-2.4 and is followed by Egemen's sections 2.5-2.7.

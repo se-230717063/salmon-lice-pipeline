@@ -6,3 +6,4 @@ matplotlib
 jupyter
 nbformat
 nbclient
+ipython

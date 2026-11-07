@@ -1,0 +1,223 @@
+{
+  "scope": "Full M4 exploration",
+  "fresh_notebook_exit_code": 0,
+  "all_17_table_hashes_unchanged": true,
+  "workspace_database_unchanged": true,
+  "fresh_results_match": true,
+  "read_only_write_attempts_rejected": 2,
+  "figure_sha256": {
+    "m4_cagatay_coverage.png": "60846759546295f40d7bab9c3f0bb3218f74afe57bbd29e069ce958a24fe1c3d",
+    "m4_cagatay_shape_overall.png": "c01d838b74900ba60c1464582bf0022dd3bf7ab082e5e3600764e861bfe80792",
+    "m4_cagatay_shape_years.png": "0800e4974489d9eb3b8c41981e910006afb2b6c94dccfab9d5b41b7918c043ab",
+    "m4_egemen_comparison.png": "6fddb9ce1c1f2e39d035d90a93fbf4f86a7513c7a3f0b08a278d20e22b75a76e",
+    "m4_egemen_relationship.png": "c1b4e222f501832f0119587c510e1bb84f2c7fb3b782765e1478b724b7f44c28",
+    "m4_egemen_time.png": "a6945fada6dc6dd174f3f6da910eaf8bee9ca79c054755b520e2962528d2eae1"
+  },
+  "sql_formatted_arguments": [],
+  "fresh_validation": [
+    {
+      "id": "row_counts",
+      "level": "PASS",
+      "detail": "All six cleaned tables equal their source row counts"
+    },
+    {
+      "id": "raw_preservation",
+      "level": "PASS",
+      "detail": "Changed keys/raw/provenance: []"
+    },
+    {
+      "id": "impossible_values",
+      "level": "PASS",
+      "detail": "{'negative_lice': 0, 'temperature_range': 0, 'negative_cages': 0, 'invalid_flag_with_value': 0, 'lice_invalid_flag_with_value': 0, 'calendar_or_future_values': 0}"
+    },
+    {
+      "id": "foreign_keys",
+      "level": "PASS",
+      "detail": "No M2/M3 foreign-key violations"
+    },
+    {
+      "id": "strict_schema",
+      "level": "PASS",
+      "detail": "Non-STRICT tables: []"
+    },
+    {
+      "id": "missing_share",
+      "level": "WARN",
+      "detail": "Elapsed temperature NULL share > 0.35: {10292: 0.3775, 10324: 0.4458, 11405: 0.3976, 12652: 0.4217, 12855: 0.3574, 20559: 0.3614, 26955: 0.3534, 29816: 0.3614, 30517: 0.4779, 31497: 0.4458, 33617: 0.3936, 35377: 0.3534}"
+    },
+    {
+      "id": "freshness",
+      "level": "WARN",
+      "detail": "Expected (2026, 40) at retrieval 2026-10-10; usable 26/40; missing [10324, 10328, 11290, 11922, 12652, 12660, 20559, 31497, 31557, 31757, 33197, 33617, 35377, 36737]"
+    },
+    {
+      "id": "sequence_review",
+      "level": "WARN",
+      "detail": "Retained suspect measurements: [('suspect_spike', 5), ('suspect_stuck', 31)]"
+    },
+    {
+      "id": "ambiguous_substance_code",
+      "level": "WARN",
+      "detail": "93 medicinal events have non-identifying substance code 0; names preserved"
+    },
+    {
+      "id": "unknown_cages",
+      "level": "WARN",
+      "detail": "203 non-wrapper interventions have unknown cage counts"
+    },
+    {
+      "id": "mapping_matches",
+      "level": "PASS",
+      "detail": "Unused mapping entries: []"
+    }
+  ],
+  "fresh_before": {
+    "municipality": {
+      "rows": 371,
+      "sha256": "b2b6bca5a4b276092dc34a815a4d81a0b3514bc105bc756dd458d252ec26ed99"
+    },
+    "locality": {
+      "rows": 2710,
+      "sha256": "9a93afdbad6aa8efd002151650467911abf2bb722fe4847b1eaa3b3a2154041b"
+    },
+    "lice_weekly": {
+      "rows": 6951,
+      "sha256": "1063d99d5a96ddb0182df9a182595385ad46227114ba615b49acb0b45586c007"
+    },
+    "sea_temperature_weekly": {
+      "rows": 10440,
+      "sha256": "e32aacaff66b7818582805fdd5be9723f4e4dfd68e583f6915211a9a701370d8"
+    },
+    "treatment_weekly": {
+      "rows": 816,
+      "sha256": "9ad4e7dc2751f40a1a5bf822bdcfb8e080ead475b8269a90a80b90f7cada0db1"
+    },
+    "treatment_event": {
+      "rows": 889,
+      "sha256": "0decd245968d7d5ec7a42fe0e1a5726684e59c79afc57fd14e48024489dfbdfb"
+    },
+    "quarantine": {
+      "rows": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "lice_weekly_clean": {
+      "rows": 6951,
+      "sha256": "91673ff589e5465b2f4e48cb31ef1fa8a8be5a5d7ec5678b3989dfc4fedf3cc3"
+    },
+    "sea_temperature_weekly_clean": {
+      "rows": 10440,
+      "sha256": "6a37587d55fac5216df0305077addcc98188d2768c2dfd6d544606d553548a8c"
+    },
+    "municipality_clean": {
+      "rows": 371,
+      "sha256": "edfc66878c6a385e8d201ddef913487b25b3ab7e5f6533235fa8896e991136e0"
+    },
+    "locality_clean": {
+      "rows": 2710,
+      "sha256": "7470befbb1db5526764605c30e0fc0cd422cc75508b8791a2317517fee2e7cc2"
+    },
+    "treatment_weekly_clean": {
+      "rows": 816,
+      "sha256": "6de35853df2cb70d00e3eca65b10fa7aa081361d46e04378717e6f82cb1a529e"
+    },
+    "treatment_event_clean": {
+      "rows": 889,
+      "sha256": "4edb0b0bd0bd9be190e5be913070ef7097fa2b62364419f22789330502448d78"
+    },
+    "municipality_name_mapping": {
+      "rows": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "locality_name_mapping": {
+      "rows": 3,
+      "sha256": "b8ece62d88d375d6965aae56cf252e4dbd04fac34209722b81233a5c2cd409dd"
+    },
+    "treatment_value_mapping": {
+      "rows": 8,
+      "sha256": "795b12dd555661f00818e461a09bae9cf0d4ec39e50986d00441fb834a8407c6"
+    },
+    "locality_identity_mapping": {
+      "rows": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "fresh_after": {
+    "municipality": {
+      "rows": 371,
+      "sha256": "b2b6bca5a4b276092dc34a815a4d81a0b3514bc105bc756dd458d252ec26ed99"
+    },
+    "locality": {
+      "rows": 2710,
+      "sha256": "9a93afdbad6aa8efd002151650467911abf2bb722fe4847b1eaa3b3a2154041b"
+    },
+    "lice_weekly": {
+      "rows": 6951,
+      "sha256": "1063d99d5a96ddb0182df9a182595385ad46227114ba615b49acb0b45586c007"
+    },
+    "sea_temperature_weekly": {
+      "rows": 10440,
+      "sha256": "e32aacaff66b7818582805fdd5be9723f4e4dfd68e583f6915211a9a701370d8"
+    },
+    "treatment_weekly": {
+      "rows": 816,
+      "sha256": "9ad4e7dc2751f40a1a5bf822bdcfb8e080ead475b8269a90a80b90f7cada0db1"
+    },
+    "treatment_event": {
+      "rows": 889,
+      "sha256": "0decd245968d7d5ec7a42fe0e1a5726684e59c79afc57fd14e48024489dfbdfb"
+    },
+    "quarantine": {
+      "rows": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "lice_weekly_clean": {
+      "rows": 6951,
+      "sha256": "91673ff589e5465b2f4e48cb31ef1fa8a8be5a5d7ec5678b3989dfc4fedf3cc3"
+    },
+    "sea_temperature_weekly_clean": {
+      "rows": 10440,
+      "sha256": "6a37587d55fac5216df0305077addcc98188d2768c2dfd6d544606d553548a8c"
+    },
+    "municipality_clean": {
+      "rows": 371,
+      "sha256": "edfc66878c6a385e8d201ddef913487b25b3ab7e5f6533235fa8896e991136e0"
+    },
+    "locality_clean": {
+      "rows": 2710,
+      "sha256": "7470befbb1db5526764605c30e0fc0cd422cc75508b8791a2317517fee2e7cc2"
+    },
+    "treatment_weekly_clean": {
+      "rows": 816,
+      "sha256": "6de35853df2cb70d00e3eca65b10fa7aa081361d46e04378717e6f82cb1a529e"
+    },
+    "treatment_event_clean": {
+      "rows": 889,
+      "sha256": "4edb0b0bd0bd9be190e5be913070ef7097fa2b62364419f22789330502448d78"
+    },
+    "municipality_name_mapping": {
+      "rows": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "locality_name_mapping": {
+      "rows": 3,
+      "sha256": "b8ece62d88d375d6965aae56cf252e4dbd04fac34209722b81233a5c2cd409dd"
+    },
+    "treatment_value_mapping": {
+      "rows": 8,
+      "sha256": "795b12dd555661f00818e461a09bae9cf0d4ec39e50986d00441fb834a8407c6"
+    },
+    "locality_identity_mapping": {
+      "rows": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "versions": {
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "matplotlib": "3.11.2",
+    "nbformat": "5.11.1",
+    "nbclient": "0.11.0",
+    "nbconvert": "7.17.2",
+    "ipykernel": "7.4.0"
+  }
+}

@@ -329,5 +329,1353 @@
         "unusual_low"
       ]
     }
+  },
+  {
+    "id": "E-CALENDAR-0.2-(16, 21)",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "What is the descriptive frequency in a documented spring calendar window?",
+    "choices": {
+      "threshold": 0.2,
+      "weeks": [
+        16,
+        21
+      ],
+      "n": 699,
+      "flag_filter": [
+        "ok",
+        "unusual_high",
+        "unusual_low"
+      ],
+      "coverage_rule": "available reports; windows overlap in week 21; no legal regime assigned"
+    }
+  },
+  {
+    "id": "E-CALENDAR-0.2-(21, 26)",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "What is the descriptive frequency in a documented spring calendar window?",
+    "choices": {
+      "threshold": 0.2,
+      "weeks": [
+        21,
+        26
+      ],
+      "n": 769,
+      "flag_filter": [
+        "ok",
+        "unusual_high",
+        "unusual_low"
+      ],
+      "coverage_rule": "available reports; windows overlap in week 21; no legal regime assigned"
+    }
+  },
+  {
+    "id": "E-TIME-0.2",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "Does a reporting-coverage rule hide thin weekly/block time points?",
+    "choices": {
+      "threshold": 0.2,
+      "min_weekly_farms": 20,
+      "min_block_coverage": 0.5,
+      "flag_filter": [
+        "ok",
+        "unusual_high",
+        "unusual_low"
+      ],
+      "weekly_shown": 207
+    }
+  },
+  {
+    "id": "E-CALENDAR-0.5-(16, 21)",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "What is the descriptive frequency in a documented spring calendar window?",
+    "choices": {
+      "threshold": 0.5,
+      "weeks": [
+        16,
+        21
+      ],
+      "n": 699,
+      "flag_filter": [
+        "ok",
+        "unusual_high",
+        "unusual_low"
+      ],
+      "coverage_rule": "available reports; windows overlap in week 21; no legal regime assigned"
+    }
+  },
+  {
+    "id": "E-CALENDAR-0.5-(21, 26)",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "What is the descriptive frequency in a documented spring calendar window?",
+    "choices": {
+      "threshold": 0.5,
+      "weeks": [
+        21,
+        26
+      ],
+      "n": 769,
+      "flag_filter": [
+        "ok",
+        "unusual_high",
+        "unusual_low"
+      ],
+      "coverage_rule": "available reports; windows overlap in week 21; no legal regime assigned"
+    }
+  },
+  {
+    "id": "E-TIME-0.5",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "Does a reporting-coverage rule hide thin weekly/block time points?",
+    "choices": {
+      "threshold": 0.5,
+      "min_weekly_farms": 20,
+      "min_block_coverage": 0.5,
+      "flag_filter": [
+        "ok",
+        "unusual_high",
+        "unusual_low"
+      ],
+      "weekly_shown": 207
+    }
+  },
+  {
+    "id": "E-CORR-primary clean pairs",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "How sensitive are temperature/lice coefficients to flags, extremes and shared structure?",
+    "choices": {
+      "label": "primary clean pairs",
+      "n": 6003,
+      "pearson": 0.06359587807088724,
+      "spearman": 0.008461806052492997,
+      "tail_quantile": 0.99,
+      "tail_cutoff": 1.0093999910354483,
+      "primary_lice_flags": [
+        "ok",
+        "unusual_high",
+        "unusual_low"
+      ],
+      "primary_temperature_flags": [
+        "ok",
+        "unusual_high",
+        "unusual_low",
+        "suspect_stuck",
+        "suspect_spike"
+      ]
+    }
+  },
+  {
+    "id": "E-CORR-raw pairs including extreme temperature",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "How sensitive are temperature/lice coefficients to flags, extremes and shared structure?",
+    "choices": {
+      "label": "raw pairs including extreme temperature",
+      "n": 6004,
+      "pearson": 0.05108853039770791,
+      "spearman": 0.008440112581913108,
+      "tail_quantile": 0.99,
+      "tail_cutoff": 1.0093999910354483,
+      "primary_lice_flags": [
+        "ok",
+        "unusual_high",
+        "unusual_low"
+      ],
+      "primary_temperature_flags": [
+        "ok",
+        "unusual_high",
+        "unusual_low",
+        "suspect_stuck",
+        "suspect_spike"
+      ]
+    }
+  },
+  {
+    "id": "E-CORR-strict lice and temperature flags",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "How sensitive are temperature/lice coefficients to flags, extremes and shared structure?",
+    "choices": {
+      "label": "strict lice and temperature flags",
+      "n": 5855,
+      "pearson": 0.0368447779664044,
+      "spearman": -0.007451360205581572,
+      "tail_quantile": 0.99,
+      "tail_cutoff": 1.0093999910354483,
+      "primary_lice_flags": [
+        "ok",
+        "unusual_high",
+        "unusual_low"
+      ],
+      "primary_temperature_flags": [
+        "ok",
+        "unusual_high",
+        "unusual_low",
+        "suspect_stuck",
+        "suspect_spike"
+      ]
+    }
+  },
+  {
+    "id": "E-CORR-strict lice only; broad temperature",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "How sensitive are temperature/lice coefficients to flags, extremes and shared structure?",
+    "choices": {
+      "label": "strict lice only; broad temperature",
+      "n": 5880,
+      "pearson": 0.036290444513040074,
+      "spearman": -0.005860211552238139,
+      "tail_quantile": 0.99,
+      "tail_cutoff": 1.0093999910354483,
+      "primary_lice_flags": [
+        "ok",
+        "unusual_high",
+        "unusual_low"
+      ],
+      "primary_temperature_flags": [
+        "ok",
+        "unusual_high",
+        "unusual_low",
+        "suspect_stuck",
+        "suspect_spike"
+      ]
+    }
+  },
+  {
+    "id": "E-CORR-remove upper lice tail",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "How sensitive are temperature/lice coefficients to flags, extremes and shared structure?",
+    "choices": {
+      "label": "remove upper lice tail",
+      "n": 5942,
+      "pearson": 0.03903297272155859,
+      "spearman": -0.00389117622888421,
+      "tail_quantile": 0.99,
+      "tail_cutoff": 1.0093999910354483,
+      "primary_lice_flags": [
+        "ok",
+        "unusual_high",
+        "unusual_low"
+      ],
+      "primary_temperature_flags": [
+        "ok",
+        "unusual_high",
+        "unusual_low",
+        "suspect_stuck",
+        "suspect_spike"
+      ]
+    }
+  },
+  {
+    "id": "E-CORR-within farm-year centred",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "How sensitive are temperature/lice coefficients to flags, extremes and shared structure?",
+    "choices": {
+      "label": "within farm-year centred",
+      "n": 6003,
+      "pearson": 0.10244892297177684,
+      "spearman": 0.09602592562420413,
+      "tail_quantile": 0.99,
+      "tail_cutoff": 1.0093999910354483,
+      "primary_lice_flags": [
+        "ok",
+        "unusual_high",
+        "unusual_low"
+      ],
+      "primary_temperature_flags": [
+        "ok",
+        "unusual_high",
+        "unusual_low",
+        "suspect_stuck",
+        "suspect_spike"
+      ]
+    }
+  },
+  {
+    "id": "E-CORR-within year-week centred",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "How sensitive are temperature/lice coefficients to flags, extremes and shared structure?",
+    "choices": {
+      "label": "within year-week centred",
+      "n": 6003,
+      "pearson": -0.010526853881400499,
+      "spearman": -0.032968813955256825,
+      "tail_quantile": 0.99,
+      "tail_cutoff": 1.0093999910354483,
+      "primary_lice_flags": [
+        "ok",
+        "unusual_high",
+        "unusual_low"
+      ],
+      "primary_temperature_flags": [
+        "ok",
+        "unusual_high",
+        "unusual_low",
+        "suspect_stuck",
+        "suspect_spike"
+      ]
+    }
+  },
+  {
+    "id": "E-CORR-BLOCK-1",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "Is a pooled association also visible within season blocks?",
+    "choices": {
+      "label": "within source-year block 1",
+      "n": 1335,
+      "pearson": -0.11400108586206968,
+      "spearman": -0.16855258838984238
+    }
+  },
+  {
+    "id": "E-CORR-BLOCK-2",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "Is a pooled association also visible within season blocks?",
+    "choices": {
+      "label": "within source-year block 2",
+      "n": 1539,
+      "pearson": -0.021172907875958127,
+      "spearman": -0.053883661180629865
+    }
+  },
+  {
+    "id": "E-CORR-BLOCK-3",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "Is a pooled association also visible within season blocks?",
+    "choices": {
+      "label": "within source-year block 3",
+      "n": 1636,
+      "pearson": 0.06586301677642936,
+      "spearman": 0.130957618822771
+    }
+  },
+  {
+    "id": "E-CORR-BLOCK-4",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "Is a pooled association also visible within season blocks?",
+    "choices": {
+      "label": "within source-year block 4",
+      "n": 1493,
+      "pearson": 0.006142931931090884,
+      "spearman": -0.0470882221016253
+    }
+  },
+  {
+    "id": "E-CORR-EXCLUDE-10110",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "Can one locality explain the pooled coefficient?",
+    "choices": {
+      "label": "exclude locality 10110",
+      "n": 5846,
+      "pearson": 0.06860976589479091,
+      "spearman": 0.018301820772134665
+    }
+  },
+  {
+    "id": "E-CORR-EXCLUDE-10262",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "Can one locality explain the pooled coefficient?",
+    "choices": {
+      "label": "exclude locality 10262",
+      "n": 5866,
+      "pearson": 0.06553966891875307,
+      "spearman": 0.010140816370934204
+    }
+  },
+  {
+    "id": "E-CORR-EXCLUDE-10292",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "Can one locality explain the pooled coefficient?",
+    "choices": {
+      "label": "exclude locality 10292",
+      "n": 5867,
+      "pearson": 0.0632122602692018,
+      "spearman": 0.009073188876191777
+    }
+  },
+  {
+    "id": "E-CORR-EXCLUDE-10324",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "Can one locality explain the pooled coefficient?",
+    "choices": {
+      "label": "exclude locality 10324",
+      "n": 5868,
+      "pearson": 0.05986393552195862,
+      "spearman": -0.0010360292443374408
+    }
+  },
+  {
+    "id": "E-CORR-EXCLUDE-10328",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "Can one locality explain the pooled coefficient?",
+    "choices": {
+      "label": "exclude locality 10328",
+      "n": 5865,
+      "pearson": 0.07087102166102476,
+      "spearman": 0.016294377253109452
+    }
+  },
+  {
+    "id": "E-CORR-EXCLUDE-11290",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "Can one locality explain the pooled coefficient?",
+    "choices": {
+      "label": "exclude locality 11290",
+      "n": 5882,
+      "pearson": 0.062277414594441596,
+      "spearman": 0.005856021439408438
+    }
+  },
+  {
+    "id": "E-CORR-EXCLUDE-11312",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "Can one locality explain the pooled coefficient?",
+    "choices": {
+      "label": "exclude locality 11312",
+      "n": 5861,
+      "pearson": 0.06464917796815817,
+      "spearman": 0.012280386257782265
+    }
+  },
+  {
+    "id": "E-CORR-EXCLUDE-11350",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "Can one locality explain the pooled coefficient?",
+    "choices": {
+      "label": "exclude locality 11350",
+      "n": 5844,
+      "pearson": 0.06272227769998626,
+      "spearman": 0.008749732712163318
+    }
+  },
+  {
+    "id": "E-CORR-EXCLUDE-11405",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "Can one locality explain the pooled coefficient?",
+    "choices": {
+      "label": "exclude locality 11405",
+      "n": 5881,
+      "pearson": 0.06650955456490026,
+      "spearman": 0.013884946998627601
+    }
+  },
+  {
+    "id": "E-CORR-EXCLUDE-11800",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "Can one locality explain the pooled coefficient?",
+    "choices": {
+      "label": "exclude locality 11800",
+      "n": 5852,
+      "pearson": 0.060679281103229676,
+      "spearman": 0.004684300120706099
+    }
+  },
+  {
+    "id": "E-CORR-EXCLUDE-11922",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "Can one locality explain the pooled coefficient?",
+    "choices": {
+      "label": "exclude locality 11922",
+      "n": 5825,
+      "pearson": 0.06272195105364341,
+      "spearman": 0.008608108994131706
+    }
+  },
+  {
+    "id": "E-CORR-EXCLUDE-12244",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "Can one locality explain the pooled coefficient?",
+    "choices": {
+      "label": "exclude locality 12244",
+      "n": 5846,
+      "pearson": 0.06291106635092164,
+      "spearman": 0.0060653532307144604
+    }
+  },
+  {
+    "id": "E-CORR-EXCLUDE-12652",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "Can one locality explain the pooled coefficient?",
+    "choices": {
+      "label": "exclude locality 12652",
+      "n": 5864,
+      "pearson": 0.06707085160777855,
+      "spearman": 0.011987226689609675
+    }
+  },
+  {
+    "id": "E-CORR-EXCLUDE-12660",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "Can one locality explain the pooled coefficient?",
+    "choices": {
+      "label": "exclude locality 12660",
+      "n": 5832,
+      "pearson": 0.06391025269185743,
+      "spearman": 0.01119050615680973
+    }
+  },
+  {
+    "id": "E-CORR-EXCLUDE-12714",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "Can one locality explain the pooled coefficient?",
+    "choices": {
+      "label": "exclude locality 12714",
+      "n": 5844,
+      "pearson": 0.06177864852425782,
+      "spearman": 0.004555557344340196
+    }
+  },
+  {
+    "id": "E-CORR-EXCLUDE-12855",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "Can one locality explain the pooled coefficient?",
+    "choices": {
+      "label": "exclude locality 12855",
+      "n": 5849,
+      "pearson": 0.06096546915264748,
+      "spearman": 0.012575418009198692
+    }
+  },
+  {
+    "id": "E-CORR-EXCLUDE-12897",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "Can one locality explain the pooled coefficient?",
+    "choices": {
+      "label": "exclude locality 12897",
+      "n": 5832,
+      "pearson": 0.061271482639906026,
+      "spearman": 0.0056551613895150146
+    }
+  },
+  {
+    "id": "E-CORR-EXCLUDE-13226",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "Can one locality explain the pooled coefficient?",
+    "choices": {
+      "label": "exclude locality 13226",
+      "n": 5871,
+      "pearson": 0.06604947756204417,
+      "spearman": 0.015442028407047906
+    }
+  },
+  {
+    "id": "E-CORR-EXCLUDE-13229",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "Can one locality explain the pooled coefficient?",
+    "choices": {
+      "label": "exclude locality 13229",
+      "n": 5821,
+      "pearson": 0.04983336755133859,
+      "spearman": -0.0065987767490707635
+    }
+  },
+  {
+    "id": "E-CORR-EXCLUDE-13870",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "Can one locality explain the pooled coefficient?",
+    "choices": {
+      "label": "exclude locality 13870",
+      "n": 5823,
+      "pearson": 0.07180172765102291,
+      "spearman": 0.02226155446869327
+    }
+  },
+  {
+    "id": "E-CORR-EXCLUDE-20316",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "Can one locality explain the pooled coefficient?",
+    "choices": {
+      "label": "exclude locality 20316",
+      "n": 5841,
+      "pearson": 0.059234205663486014,
+      "spearman": 0.0005325893412676772
+    }
+  },
+  {
+    "id": "E-CORR-EXCLUDE-20559",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "Can one locality explain the pooled coefficient?",
+    "choices": {
+      "label": "exclude locality 20559",
+      "n": 5861,
+      "pearson": 0.06100771828792129,
+      "spearman": -0.0003187385787094012
+    }
+  },
+  {
+    "id": "E-CORR-EXCLUDE-22095",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "Can one locality explain the pooled coefficient?",
+    "choices": {
+      "label": "exclude locality 22095",
+      "n": 5816,
+      "pearson": 0.07306123508652773,
+      "spearman": 0.018370469778590116
+    }
+  },
+  {
+    "id": "E-CORR-EXCLUDE-26955",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "Can one locality explain the pooled coefficient?",
+    "choices": {
+      "label": "exclude locality 26955",
+      "n": 5854,
+      "pearson": 0.06764098624302886,
+      "spearman": 0.012365731962091698
+    }
+  },
+  {
+    "id": "E-CORR-EXCLUDE-29816",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "Can one locality explain the pooled coefficient?",
+    "choices": {
+      "label": "exclude locality 29816",
+      "n": 5880,
+      "pearson": 0.06418576559868751,
+      "spearman": 0.00545273759660901
+    }
+  },
+  {
+    "id": "E-CORR-EXCLUDE-30517",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "Can one locality explain the pooled coefficient?",
+    "choices": {
+      "label": "exclude locality 30517",
+      "n": 5882,
+      "pearson": 0.06278700636140426,
+      "spearman": 0.008582228607010446
+    }
+  },
+  {
+    "id": "E-CORR-EXCLUDE-31497",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "Can one locality explain the pooled coefficient?",
+    "choices": {
+      "label": "exclude locality 31497",
+      "n": 5879,
+      "pearson": 0.058346203501426726,
+      "spearman": 0.012052611028869835
+    }
+  },
+  {
+    "id": "E-CORR-EXCLUDE-31557",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "Can one locality explain the pooled coefficient?",
+    "choices": {
+      "label": "exclude locality 31557",
+      "n": 5841,
+      "pearson": 0.05754468480183308,
+      "spearman": -0.0012198285009539563
+    }
+  },
+  {
+    "id": "E-CORR-EXCLUDE-31757",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "Can one locality explain the pooled coefficient?",
+    "choices": {
+      "label": "exclude locality 31757",
+      "n": 5839,
+      "pearson": 0.06156295085947607,
+      "spearman": 0.0047665694390297475
+    }
+  },
+  {
+    "id": "E-CORR-EXCLUDE-33197",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "Can one locality explain the pooled coefficient?",
+    "choices": {
+      "label": "exclude locality 33197",
+      "n": 5851,
+      "pearson": 0.05985964334989682,
+      "spearman": 0.0014283272922440613
+    }
+  },
+  {
+    "id": "E-CORR-EXCLUDE-33617",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "Can one locality explain the pooled coefficient?",
+    "choices": {
+      "label": "exclude locality 33617",
+      "n": 5852,
+      "pearson": 0.06492494487926388,
+      "spearman": 0.008607221677048119
+    }
+  },
+  {
+    "id": "E-CORR-EXCLUDE-34457",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "Can one locality explain the pooled coefficient?",
+    "choices": {
+      "label": "exclude locality 34457",
+      "n": 5866,
+      "pearson": 0.06626701959179383,
+      "spearman": 0.01603104040560743
+    }
+  },
+  {
+    "id": "E-CORR-EXCLUDE-35377",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "Can one locality explain the pooled coefficient?",
+    "choices": {
+      "label": "exclude locality 35377",
+      "n": 5870,
+      "pearson": 0.05695526166020801,
+      "spearman": 0.0014712529696076283
+    }
+  },
+  {
+    "id": "E-CORR-EXCLUDE-35617",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "Can one locality explain the pooled coefficient?",
+    "choices": {
+      "label": "exclude locality 35617",
+      "n": 5836,
+      "pearson": 0.05803171039687013,
+      "spearman": -0.00034115568368561067
+    }
+  },
+  {
+    "id": "E-CORR-EXCLUDE-36077",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "Can one locality explain the pooled coefficient?",
+    "choices": {
+      "label": "exclude locality 36077",
+      "n": 5850,
+      "pearson": 0.0640554291150036,
+      "spearman": 0.00998216923358742
+    }
+  },
+  {
+    "id": "E-CORR-EXCLUDE-36517",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "Can one locality explain the pooled coefficient?",
+    "choices": {
+      "label": "exclude locality 36517",
+      "n": 5844,
+      "pearson": 0.05953894078042882,
+      "spearman": 0.0032985536796912517
+    }
+  },
+  {
+    "id": "E-CORR-EXCLUDE-36737",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "Can one locality explain the pooled coefficient?",
+    "choices": {
+      "label": "exclude locality 36737",
+      "n": 5844,
+      "pearson": 0.06676436119794017,
+      "spearman": 0.01217903664013295
+    }
+  },
+  {
+    "id": "E-CORR-EXCLUDE-37357",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "Can one locality explain the pooled coefficient?",
+    "choices": {
+      "label": "exclude locality 37357",
+      "n": 5832,
+      "pearson": 0.07065783495534539,
+      "spearman": 0.024608695465027048
+    }
+  },
+  {
+    "id": "E-CORR-EXCLUDE-45017",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "Can one locality explain the pooled coefficient?",
+    "choices": {
+      "label": "exclude locality 45017",
+      "n": 5864,
+      "pearson": 0.05768837231687159,
+      "spearman": 0.0035574793777069366
+    }
+  },
+  {
+    "id": "E-CORR-EXCLUDE-45025",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "Can one locality explain the pooled coefficient?",
+    "choices": {
+      "label": "exclude locality 45025",
+      "n": 5876,
+      "pearson": 0.08228584175255728,
+      "spearman": 0.007579813125096777
+    }
+  },
+  {
+    "id": "E-COMP-PRESPEC",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "What comparison will supply the primary interval?",
+    "choices": {
+      "main_threshold": 0.2,
+      "cold_half_open_c": [
+        4.0,
+        8.0
+      ],
+      "warm_half_open_c": [
+        12.0,
+        16.0
+      ],
+      "min_annual_coverage": 0.75,
+      "min_paired_reports_each_regime": 6,
+      "bootstrap_unit": "farm with all its paired years",
+      "replicates": 2000,
+      "seed": 42
+    }
+  },
+  {
+    "id": "E-COMP-0.2-primary",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "What is the equal-farm warm-minus-cold difference and clustered interval?",
+    "choices": {
+      "threshold": 0.2,
+      "filter": "primary",
+      "farms": 31,
+      "paired_farm_years": 53,
+      "difference": 0.20865540283494222,
+      "interval95": [
+        0.12846849475044925,
+        0.2870409111226304
+      ]
+    }
+  },
+  {
+    "id": "E-COMP-0.2-primary-year-2022",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "Does a time-stratum contrast reverse or weaken the main comparison?",
+    "choices": {
+      "n_cold": 151,
+      "share_cold": 0.2781456953642384,
+      "n_warm": 137,
+      "share_warm": 0.46715328467153283,
+      "difference": 0.18900758930729444,
+      "year": 2022
+    }
+  },
+  {
+    "id": "E-COMP-0.2-primary-year-2023",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "Does a time-stratum contrast reverse or weaken the main comparison?",
+    "choices": {
+      "n_cold": 315,
+      "share_cold": 0.16507936507936508,
+      "n_warm": 168,
+      "share_warm": 0.27976190476190477,
+      "difference": 0.11468253968253969,
+      "year": 2023
+    }
+  },
+  {
+    "id": "E-COMP-0.2-primary-year-2024",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "Does a time-stratum contrast reverse or weaken the main comparison?",
+    "choices": {
+      "n_cold": 242,
+      "share_cold": 0.256198347107438,
+      "n_warm": 179,
+      "share_warm": 0.3743016759776536,
+      "difference": 0.11810332887021563,
+      "year": 2024
+    }
+  },
+  {
+    "id": "E-COMP-0.2-primary-year-2025",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "Does a time-stratum contrast reverse or weaken the main comparison?",
+    "choices": {
+      "n_cold": 267,
+      "share_cold": 0.1947565543071161,
+      "n_warm": 204,
+      "share_warm": 0.5588235294117647,
+      "difference": 0.3640669751046486,
+      "year": 2025
+    }
+  },
+  {
+    "id": "E-COMP-0.2-primary-block-1",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "Does a time-stratum contrast reverse or weaken the main comparison?",
+    "choices": {
+      "n_cold": 544,
+      "share_cold": 0.23897058823529413,
+      "n_warm": 0,
+      "share_warm": null,
+      "difference": null,
+      "block": 1
+    }
+  },
+  {
+    "id": "E-COMP-0.2-primary-block-2",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "Does a time-stratum contrast reverse or weaken the main comparison?",
+    "choices": {
+      "n_cold": 306,
+      "share_cold": 0.08169934640522876,
+      "n_warm": 81,
+      "share_warm": 0.2839506172839506,
+      "difference": 0.20225127087872186,
+      "block": 2
+    }
+  },
+  {
+    "id": "E-COMP-0.2-primary-block-3",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "Does a time-stratum contrast reverse or weaken the main comparison?",
+    "choices": {
+      "n_cold": 0,
+      "share_cold": null,
+      "n_warm": 489,
+      "share_warm": 0.4274028629856851,
+      "difference": null,
+      "block": 3
+    }
+  },
+  {
+    "id": "E-COMP-0.2-primary-block-4",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "Does a time-stratum contrast reverse or weaken the main comparison?",
+    "choices": {
+      "n_cold": 125,
+      "share_cold": 0.424,
+      "n_warm": 118,
+      "share_warm": 0.5084745762711864,
+      "difference": 0.08447457627118643,
+      "block": 4
+    }
+  },
+  {
+    "id": "E-COMP-0.2-primary-same_year_week",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "Is there overlap when comparison groups share a narrower period?",
+    "choices": {
+      "strata": 1,
+      "mean_difference": 0.25,
+      "minimum_per_regime": 3
+    }
+  },
+  {
+    "id": "E-COMP-0.2-primary-within_farm_year_block",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "Is there overlap when comparison groups share a narrower period?",
+    "choices": {
+      "strata": 27,
+      "mean_difference": 0.17314814814814816,
+      "minimum_per_regime": 2
+    }
+  },
+  {
+    "id": "E-COMP-0.2-strict",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "What is the equal-farm warm-minus-cold difference and clustered interval?",
+    "choices": {
+      "threshold": 0.2,
+      "filter": "strict",
+      "farms": 31,
+      "paired_farm_years": 49,
+      "difference": 0.19274982055133075,
+      "interval95": [
+        0.10631036508177188,
+        0.272996103908542
+      ]
+    }
+  },
+  {
+    "id": "E-COMP-0.2-strict-year-2022",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "Does a time-stratum contrast reverse or weaken the main comparison?",
+    "choices": {
+      "n_cold": 144,
+      "share_cold": 0.2777777777777778,
+      "n_warm": 121,
+      "share_warm": 0.49586776859504134,
+      "difference": 0.21808999081726355,
+      "year": 2022
+    }
+  },
+  {
+    "id": "E-COMP-0.2-strict-year-2023",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "Does a time-stratum contrast reverse or weaken the main comparison?",
+    "choices": {
+      "n_cold": 311,
+      "share_cold": 0.15434083601286175,
+      "n_warm": 166,
+      "share_warm": 0.2710843373493976,
+      "difference": 0.11674350133653583,
+      "year": 2023
+    }
+  },
+  {
+    "id": "E-COMP-0.2-strict-year-2024",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "Does a time-stratum contrast reverse or weaken the main comparison?",
+    "choices": {
+      "n_cold": 223,
+      "share_cold": 0.24663677130044842,
+      "n_warm": 150,
+      "share_warm": 0.38666666666666666,
+      "difference": 0.14002989536621824,
+      "year": 2024
+    }
+  },
+  {
+    "id": "E-COMP-0.2-strict-year-2025",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "Does a time-stratum contrast reverse or weaken the main comparison?",
+    "choices": {
+      "n_cold": 251,
+      "share_cold": 0.18725099601593626,
+      "n_warm": 172,
+      "share_warm": 0.5872093023255814,
+      "difference": 0.3999583063096452,
+      "year": 2025
+    }
+  },
+  {
+    "id": "E-COMP-0.2-strict-block-1",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "Does a time-stratum contrast reverse or weaken the main comparison?",
+    "choices": {
+      "n_cold": 523,
+      "share_cold": 0.22753346080305928,
+      "n_warm": 0,
+      "share_warm": null,
+      "difference": null,
+      "block": 1
+    }
+  },
+  {
+    "id": "E-COMP-0.2-strict-block-2",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "Does a time-stratum contrast reverse or weaken the main comparison?",
+    "choices": {
+      "n_cold": 288,
+      "share_cold": 0.08680555555555555,
+      "n_warm": 68,
+      "share_warm": 0.3382352941176471,
+      "difference": 0.2514297385620915,
+      "block": 2
+    }
+  },
+  {
+    "id": "E-COMP-0.2-strict-block-3",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "Does a time-stratum contrast reverse or weaken the main comparison?",
+    "choices": {
+      "n_cold": 0,
+      "share_cold": null,
+      "n_warm": 440,
+      "share_warm": 0.4318181818181818,
+      "difference": null,
+      "block": 3
+    }
+  },
+  {
+    "id": "E-COMP-0.2-strict-block-4",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "Does a time-stratum contrast reverse or weaken the main comparison?",
+    "choices": {
+      "n_cold": 118,
+      "share_cold": 0.3898305084745763,
+      "n_warm": 101,
+      "share_warm": 0.504950495049505,
+      "difference": 0.11511998657492867,
+      "block": 4
+    }
+  },
+  {
+    "id": "E-COMP-0.2-strict-same_year_week",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "Is there overlap when comparison groups share a narrower period?",
+    "choices": {
+      "strata": 1,
+      "mean_difference": 0.3333333333333333,
+      "minimum_per_regime": 3
+    }
+  },
+  {
+    "id": "E-COMP-0.2-strict-within_farm_year_block",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "Is there overlap when comparison groups share a narrower period?",
+    "choices": {
+      "strata": 24,
+      "mean_difference": 0.19479166666666667,
+      "minimum_per_regime": 2
+    }
+  },
+  {
+    "id": "E-COMP-0.5-primary",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "What is the equal-farm warm-minus-cold difference and clustered interval?",
+    "choices": {
+      "threshold": 0.5,
+      "filter": "primary",
+      "farms": 31,
+      "paired_farm_years": 53,
+      "difference": 0.02778897372550624,
+      "interval95": [
+        0.0013269479070500251,
+        0.05433836451699166
+      ]
+    }
+  },
+  {
+    "id": "E-COMP-0.5-primary-year-2022",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "Does a time-stratum contrast reverse or weaken the main comparison?",
+    "choices": {
+      "n_cold": 151,
+      "share_cold": 0.019867549668874173,
+      "n_warm": 137,
+      "share_warm": 0.051094890510948905,
+      "difference": 0.031227340842074732,
+      "year": 2022
+    }
+  },
+  {
+    "id": "E-COMP-0.5-primary-year-2023",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "Does a time-stratum contrast reverse or weaken the main comparison?",
+    "choices": {
+      "n_cold": 315,
+      "share_cold": 0.0,
+      "n_warm": 168,
+      "share_warm": 0.005952380952380952,
+      "difference": 0.005952380952380952,
+      "year": 2023
+    }
+  },
+  {
+    "id": "E-COMP-0.5-primary-year-2024",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "Does a time-stratum contrast reverse or weaken the main comparison?",
+    "choices": {
+      "n_cold": 242,
+      "share_cold": 0.01652892561983471,
+      "n_warm": 179,
+      "share_warm": 0.0335195530726257,
+      "difference": 0.016990627452790986,
+      "year": 2024
+    }
+  },
+  {
+    "id": "E-COMP-0.5-primary-year-2025",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "Does a time-stratum contrast reverse or weaken the main comparison?",
+    "choices": {
+      "n_cold": 267,
+      "share_cold": 0.0,
+      "n_warm": 204,
+      "share_warm": 0.08823529411764706,
+      "difference": 0.08823529411764706,
+      "year": 2025
+    }
+  },
+  {
+    "id": "E-COMP-0.5-primary-block-1",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "Does a time-stratum contrast reverse or weaken the main comparison?",
+    "choices": {
+      "n_cold": 544,
+      "share_cold": 0.0,
+      "n_warm": 0,
+      "share_warm": null,
+      "difference": null,
+      "block": 1
+    }
+  },
+  {
+    "id": "E-COMP-0.5-primary-block-2",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "Does a time-stratum contrast reverse or weaken the main comparison?",
+    "choices": {
+      "n_cold": 306,
+      "share_cold": 0.0,
+      "n_warm": 81,
+      "share_warm": 0.0,
+      "difference": 0.0,
+      "block": 2
+    }
+  },
+  {
+    "id": "E-COMP-0.5-primary-block-3",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "Does a time-stratum contrast reverse or weaken the main comparison?",
+    "choices": {
+      "n_cold": 0,
+      "share_cold": null,
+      "n_warm": 489,
+      "share_warm": 0.0408997955010225,
+      "difference": null,
+      "block": 3
+    }
+  },
+  {
+    "id": "E-COMP-0.5-primary-block-4",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "Does a time-stratum contrast reverse or weaken the main comparison?",
+    "choices": {
+      "n_cold": 125,
+      "share_cold": 0.056,
+      "n_warm": 118,
+      "share_warm": 0.1016949152542373,
+      "difference": 0.045694915254237294,
+      "block": 4
+    }
+  },
+  {
+    "id": "E-COMP-0.5-primary-same_year_week",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "Is there overlap when comparison groups share a narrower period?",
+    "choices": {
+      "strata": 1,
+      "mean_difference": 0.0,
+      "minimum_per_regime": 3
+    }
+  },
+  {
+    "id": "E-COMP-0.5-primary-within_farm_year_block",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "Is there overlap when comparison groups share a narrower period?",
+    "choices": {
+      "strata": 27,
+      "mean_difference": 0.0,
+      "minimum_per_regime": 2
+    }
+  },
+  {
+    "id": "E-COMP-0.5-strict",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "What is the equal-farm warm-minus-cold difference and clustered interval?",
+    "choices": {
+      "threshold": 0.5,
+      "filter": "strict",
+      "farms": 31,
+      "paired_farm_years": 49,
+      "difference": 0.010753663635542195,
+      "interval95": [
+        0.0026881720430107525,
+        0.021037264245874286
+      ]
+    }
+  },
+  {
+    "id": "E-COMP-0.5-strict-year-2022",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "Does a time-stratum contrast reverse or weaken the main comparison?",
+    "choices": {
+      "n_cold": 144,
+      "share_cold": 0.013888888888888888,
+      "n_warm": 121,
+      "share_warm": 0.024793388429752067,
+      "difference": 0.010904499540863179,
+      "year": 2022
+    }
+  },
+  {
+    "id": "E-COMP-0.5-strict-year-2023",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "Does a time-stratum contrast reverse or weaken the main comparison?",
+    "choices": {
+      "n_cold": 311,
+      "share_cold": 0.0,
+      "n_warm": 166,
+      "share_warm": 0.0,
+      "difference": 0.0,
+      "year": 2023
+    }
+  },
+  {
+    "id": "E-COMP-0.5-strict-year-2024",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "Does a time-stratum contrast reverse or weaken the main comparison?",
+    "choices": {
+      "n_cold": 223,
+      "share_cold": 0.0,
+      "n_warm": 150,
+      "share_warm": 0.013333333333333334,
+      "difference": 0.013333333333333334,
+      "year": 2024
+    }
+  },
+  {
+    "id": "E-COMP-0.5-strict-year-2025",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "Does a time-stratum contrast reverse or weaken the main comparison?",
+    "choices": {
+      "n_cold": 251,
+      "share_cold": 0.0,
+      "n_warm": 172,
+      "share_warm": 0.040697674418604654,
+      "difference": 0.040697674418604654,
+      "year": 2025
+    }
+  },
+  {
+    "id": "E-COMP-0.5-strict-block-1",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "Does a time-stratum contrast reverse or weaken the main comparison?",
+    "choices": {
+      "n_cold": 523,
+      "share_cold": 0.0,
+      "n_warm": 0,
+      "share_warm": null,
+      "difference": null,
+      "block": 1
+    }
+  },
+  {
+    "id": "E-COMP-0.5-strict-block-2",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "Does a time-stratum contrast reverse or weaken the main comparison?",
+    "choices": {
+      "n_cold": 288,
+      "share_cold": 0.0,
+      "n_warm": 68,
+      "share_warm": 0.0,
+      "difference": 0.0,
+      "block": 2
+    }
+  },
+  {
+    "id": "E-COMP-0.5-strict-block-3",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "Does a time-stratum contrast reverse or weaken the main comparison?",
+    "choices": {
+      "n_cold": 0,
+      "share_cold": null,
+      "n_warm": 440,
+      "share_warm": 0.015909090909090907,
+      "difference": null,
+      "block": 3
+    }
+  },
+  {
+    "id": "E-COMP-0.5-strict-block-4",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "Does a time-stratum contrast reverse or weaken the main comparison?",
+    "choices": {
+      "n_cold": 118,
+      "share_cold": 0.01694915254237288,
+      "n_warm": 101,
+      "share_warm": 0.04950495049504951,
+      "difference": 0.03255579795267663,
+      "block": 4
+    }
+  },
+  {
+    "id": "E-COMP-0.5-strict-same_year_week",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "Is there overlap when comparison groups share a narrower period?",
+    "choices": {
+      "strata": 1,
+      "mean_difference": 0.0,
+      "minimum_per_regime": 3
+    }
+  },
+  {
+    "id": "E-COMP-0.5-strict-within_farm_year_block",
+    "owner": "Mehmet Egemen Karagoz",
+    "question": "Is there overlap when comparison groups share a narrower period?",
+    "choices": {
+      "strata": 24,
+      "mean_difference": 0.0,
+      "minimum_per_regime": 2
+    }
   }
 ]

@@ -1,5 +1,5 @@
 {
-  "scope": "Cagatay sections 2.1-2.4 only; Egemen stage pending",
+  "scope": "Full M4 exploration",
   "fresh_notebook_exit_code": 0,
   "all_17_table_hashes_unchanged": true,
   "workspace_database_unchanged": true,
@@ -8,7 +8,10 @@
   "figure_sha256": {
     "m4_cagatay_coverage.png": "60846759546295f40d7bab9c3f0bb3218f74afe57bbd29e069ce958a24fe1c3d",
     "m4_cagatay_shape_overall.png": "c01d838b74900ba60c1464582bf0022dd3bf7ab082e5e3600764e861bfe80792",
-    "m4_cagatay_shape_years.png": "0800e4974489d9eb3b8c41981e910006afb2b6c94dccfab9d5b41b7918c043ab"
+    "m4_cagatay_shape_years.png": "0800e4974489d9eb3b8c41981e910006afb2b6c94dccfab9d5b41b7918c043ab",
+    "m4_egemen_comparison.png": "6fddb9ce1c1f2e39d035d90a93fbf4f86a7513c7a3f0b08a278d20e22b75a76e",
+    "m4_egemen_relationship.png": "c1b4e222f501832f0119587c510e1bb84f2c7fb3b782765e1478b724b7f44c28",
+    "m4_egemen_time.png": "a6945fada6dc6dd174f3f6da910eaf8bee9ca79c054755b520e2962528d2eae1"
   },
   "sql_formatted_arguments": [],
   "fresh_validation": [

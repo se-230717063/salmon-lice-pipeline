@@ -29,7 +29,7 @@ class Parameters:
     selected_histogram_width: float = 0.1
     temperature_edges: tuple = (-5., 4., 8., 12., 16., 20., 40.)  # Contract for later E-stage inspection, not a fitted choice.
     seed: int = 42
-    bootstrap_replicates: int = 2000  # Reserved for Egemen's stage; no interval computed by Cagatay.
+    bootstrap_replicates: int = 2000  # Equal-farm cluster percentile intervals; fixed seed below.
     min_time_farms: int = 20  # Half the cohort for a weekly pooled time point.
     time_block_weeks: int = 13  # Four source-week blocks per complete ISO year.
     min_block_coverage: float = 0.5  # Descriptive block plots require half the calendar opportunities.
@@ -156,6 +156,10 @@ def save_figure(fig, directory, filename, title, question, caption):
     fig.savefig(path,metadata={'Software':'matplotlib'},facecolor='white')
     plt.close(fig)
     print('Figure:',path.name)
+    from IPython import get_ipython
+    if get_ipython() is not None:
+        from IPython.display import Image, display
+        display(Image(filename=str(path)))
     return path
 
 

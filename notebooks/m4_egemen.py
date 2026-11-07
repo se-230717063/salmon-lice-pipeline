@@ -42,6 +42,7 @@ weekly=main_time['weekly']; blocks=main_time['blocks']
 axes[0].plot([date.fromisocalendar(r['year'],r['week'],1) for r in weekly],
              [r['share'] if r['shown'] else np.nan for r in weekly],color='#237a97',linewidth=1.2)
 axes[0].set(xlabel='Source ISO week [Monday display position; no hour/timezone]',ylabel='Reported share >= threshold [0-1]',ylim=(0,1))
+axes[0].set_xlim(date.fromisocalendar(weekly[0]['year'],weekly[0]['week'],1),date.fromisocalendar(weekly[-1]['year'],weekly[-1]['week'],1))
 axes[0].axhline(next(r['share'] for r in key_results if r['layer']=='clean_primary' and r['threshold']==PARAMS.thresholds[0]),
                 color='#9c4524',linestyle='--',label='Pooled available-report baseline')
 axes[0].legend(loc='upper right')
@@ -132,3 +133,68 @@ egemen_results['relationships']={'correlations':correlations,'leave_one_farm_out
     'tail_quantile':PARAMS.upper_tail_quantile,'tail_cutoff':tail_cutoff,'tail_removed':len(paired_primary)-len(without_tail),
     'temperature_bins':bin_summaries,'raw_pairs':len(paired_raw),'primary_pairs':len(paired_primary)}
 results['egemen']=egemen_results
+# %% [markdown]
+# ## 2.7 One comparison with a farm-cluster interval and composition checks
+# Main comparison, fixed before its outcome calculation: >=0.2 frequency in 12<=T<16 C
+# versus 4<=T<8 C, within farm-years meeting annual coverage and six reports per regime.
+# First average paired year differences within each farm, then give each farm equal weight.
+# Bootstrap whole farms, retaining all their paired years; farm-years are not independent replicates.
+# The 0.5 threshold and strict flags are sensitivities, not a search for a significant result.
+# %%
+from explore_egemen import clustered_comparison
+look_log.add('E-COMP-PRESPEC','What comparison will supply the primary interval?',
+             {'main_threshold':PARAMS.thresholds[0],'cold_half_open_c':PARAMS.cold_range_c,'warm_half_open_c':PARAMS.warm_range_c,
+              'min_annual_coverage':PARAMS.min_coverage,'min_paired_reports_each_regime':PARAMS.min_regime_weeks,
+              'bootstrap_unit':'farm with all its paired years','replicates':PARAMS.bootstrap_replicates,'seed':PARAMS.seed},owner='Mehmet Egemen Karagoz')
+comparisons=[]
+for threshold in PARAMS.thresholds:
+    for strict in (False,True):
+        estimate=clustered_comparison(con,PARAMS,threshold,strict=strict)
+        comparisons.append(estimate)
+        identifier='E-COMP-'+str(threshold)+'-'+estimate['filter']
+        look_log.add(identifier,'What is the equal-farm warm-minus-cold difference and clustered interval?',
+                     {key:estimate[key] for key in ('threshold','filter','farms','paired_farm_years','difference','interval95')},owner='Mehmet Egemen Karagoz')
+        print(identifier,'farms',estimate['farms'],'paired years',estimate['paired_farm_years'],
+              'difference',estimate['difference'],'95% interval',estimate['interval95'])
+        print('Unmatched pooled:',estimate['unmatched_pooled'],'Matched pooled:',estimate['matched_pooled'])
+        table(estimate['by_year'],['year','n_cold','n_warm','share_cold','share_warm','difference'])
+        table(estimate['by_block'],['block','n_cold','n_warm','share_cold','share_warm','difference'])
+        print('Same year-week overlap strata:',len(estimate['same_year_week']),'mean diagnostic difference',estimate['same_year_week_mean'])
+        print('Same farm-year-block overlap strata:',len(estimate['within_farm_year_block']),'mean diagnostic difference',estimate['within_farm_year_block_mean'])
+        for field in ('by_year','by_block'):
+            for stratum in estimate[field]:
+                key='year' if field=='by_year' else 'block'
+                look_log.add(identifier+'-'+key+'-'+str(stratum[key]),'Does a time-stratum contrast reverse or weaken the main comparison?',stratum,owner='Mehmet Egemen Karagoz')
+        for field in ('same_year_week','within_farm_year_block'):
+            look_log.add(identifier+'-'+field,'Is there overlap when comparison groups share a narrower period?',
+                         {'strata':len(estimate[field]),'mean_difference':estimate[field+'_mean'],
+                          'minimum_per_regime':PARAMS.min_overlap_farms if field=='same_year_week' else PARAMS.min_stratum_regime_weeks},owner='Mehmet Egemen Karagoz')
+egemen_results['comparisons']=comparisons
+main_comparison=next(r for r in comparisons if r['threshold']==PARAMS.thresholds[0] and r['filter']=='primary')
+if main_comparison['interval95'] is None:
+    raise RuntimeError('Too few farms for the prespecified comparison interval; report insufficient support')
+fig,axes=plt.subplots(1,2,figsize=(14,8))
+for index,row in enumerate(comparisons):
+    if row['interval95'] is not None:
+        point=100*row['difference']; low,high=[100*v for v in row['interval95']]
+        axes[0].plot([low,high],[index,index],color='#237a97',linewidth=2)
+        axes[0].plot(point,index,'o',color='#237a97')
+axes[0].set_yticks(range(len(comparisons)),['>='+str(r['threshold'])+', '+r['filter']+'; '+str(r['farms'])+' farms / '+str(r['paired_farm_years'])+' farm-years' for r in comparisons])
+axes[0].axvline(0,color='#9c4524',linestyle='--')
+axes[0].set(xlabel='Warm minus cold share [percentage points]',ylabel='Analytical threshold [lice/fish], filter and cluster counts',title='Equal-farm contrasts and 95% cluster intervals')
+by_year=main_comparison['by_year']
+axes[1].bar([str(r['year']) for r in by_year],[100*r['difference'] if r['difference'] is not None else np.nan for r in by_year],color='#237a97')
+axes[1].axhline(0,color='#9c4524',linestyle='--')
+for index,row in enumerate(by_year):
+    if row['difference'] is not None:
+        value=100*row['difference']
+        axes[1].annotate(str(row['n_cold'])+'/'+str(row['n_warm']),(index,value),xytext=(0,5 if value>=0 else -10),textcoords='offset points',ha='center',fontsize=8)
+axes[1].set(xlabel='Source ISO year [same matched farm-year set]',ylabel='Warm minus cold share [percentage points]',title='Year strata: pooled-report diagnostic; n cold/warm')
+save_figure(fig,FIGURE_DIR,'m4_egemen_comparison.png',
+            'Warm/cold contrasts depend on flags, weighting and time composition',
+            'How uncertain is the prespecified reported-week contrast across farms?',
+            'Cold ['+str(PARAMS.cold_range_c[0])+','+str(PARAMS.cold_range_c[1])+') / warm ['+str(PARAMS.warm_range_c[0])+','+str(PARAMS.warm_range_c[1])+') C; '+period_caption+'. Main matched n cold/warm='+str(main_comparison['matched_pooled']['n_cold'])+'/'+str(main_comparison['matched_pooled']['n_warm'])+'.\n'
+            'Primary lice: '+flag_caption+'; temperature: '+' + '.join(PARAMS.primary_temperature_flags)+'. Strict: both ok.\n'
+            'Each farm-year coverage >= '+coverage_label+'; each regime >= '+str(PARAMS.min_regime_weeks)+' paired reports. '+str(PARAMS.bootstrap_replicates)+' farm-cluster draws, seed '+str(PARAMS.seed)+'.\n'
+            'Left: percentile 95% intervals, equal farm weights. Right: descriptive year strata, different weighting; no causal effect claimed.')
+print('Total recorded configuration looks, including Cagatay:',len(look_log.entries))
