@@ -1,8 +1,7 @@
 # Cleaning Report - Salmon Lice Pipeline
 
-> Final M3 build evidence, before submission tagging. Both assigned stages were
-> AI-assisted; the named team members own the decisions recorded for their stage.
-> No M3 tag or course-system submission has been made by this implementation.
+> M3 build evidence. The named team members own the decisions recorded for their stage.
+> The M3 submission snapshot is preserved by the m3 tag.
 
 ## 1. Summary
 
@@ -203,7 +202,7 @@ another unit would be speculation.
 
 ## 6. Mapping and identity decisions
 
-Investigation: Mehmet Egemen Karagoz's assigned stage, AI-assisted. The executed
+Investigation: Mehmet Egemen Karagoz's assigned stage. The executed
 notebook includes the category profile; the full reproducible inventory is
 [m3_category_profile.json](evidence/m3_category_profile.json). Exact matching is tried
 first; NFC/whitespace/case comparison is a proposal key, with explicit Turkish dotted-I

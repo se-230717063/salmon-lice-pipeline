@@ -42,3 +42,6 @@ tmp/m3/
 
 # Local M3 submission bundle (database, raw ZIP, logs and manifest)
 output/m3_submission/
+
+# Disposable M4 fresh builds, kernel logs and figures from verification runs
+tmp/m4/

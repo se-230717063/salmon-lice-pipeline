@@ -1,2 +1,8 @@
 requests
 python-dotenv
+numpy
+scipy
+matplotlib
+jupyter
+nbformat
+nbclient
