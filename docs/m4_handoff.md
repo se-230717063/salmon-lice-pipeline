@@ -1,5 +1,9 @@
 # M4 devir: Cagatay -> Egemen
 
+> Arsivlenmis ara asama devir notu. Egemen bolumu de tamamlandi; guncel durum
+> README, eda_report.md ve docs/evidence/m4_results.json icindedir. Asagidaki
+> pending ifadeleri ilk devir anini anlatir. m4 etiketi kullanici talimati bekliyor.
+
 Cagatay'in C1-C4 bolumu tamamlandi. Tam M4 henuz tamamlanmadi; E1-E4 icin kullanici
 yonlendirmesi beklenecek. `m4` etiketi olusturulmadi. `m3` etiketi korunuyor.
 

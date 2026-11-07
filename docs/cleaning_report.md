@@ -86,6 +86,12 @@ additional rows. Cause labels distinguish evidence from interpretation.
 
 ### Checked and not found
 
+M4 follow-up review (2026-11-07): the distribution, time, pairwise influence and
+matched-comparison checks did not establish a new measurement-cleaning defect.
+No additional invalid/sentinel rule or imputation was introduced. The source-week
+calendar convention and sparse seasonal overlap are analysis limitations, not values
+to repair in the notebook. The existing issues remain documented below and in the EDA report.
+
 | Family | Check | Result / scope |
 |---|---|---|
 | Invalid | Numeric lice value < 0 | 0; no negative lice values |

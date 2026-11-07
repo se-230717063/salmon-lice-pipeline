@@ -205,7 +205,7 @@ ORDER BY FLOOR(t.sea_temperature / 2.0);
 ---
 
 ## Status
-M3 — cleaned layer and quality report complete; submission snapshot tagged `m3`.
+M4 — exploratory analysis complete. The M3 submission snapshot remains tagged `m3`.
 
 ## Data Quality (M3)
 
@@ -245,12 +245,16 @@ database, raw ZIP, final outputs, repository URL and checksum manifest; it does 
 - Çağatay Oruk (GitHub: se-230717041)
 - Mehmet Egemen Karagöz (GitHub: se-230717063)
 
-## Exploration (M4 work in progress)
+## Exploration (M4)
 
-Cagatay's sections 2.1-2.4 are complete: raw/clean lice frequencies, alternative farm summaries,
-distributions, coverage and flag sensitivity. The primary period is the complete years 2022-2025.
-Read the [interim EDA report](docs/eda_report.md) and [handoff](docs/m4_handoff.md).
-Egemen's time, relationship, interval comparison and final synthesis are pending; M4 is not yet complete.
+![Exploratory warm/cold comparison with farm-cluster intervals](figures/m4_egemen_comparison.png)
+
+In the complete years 2022-2025, 1,540/6,004 reported cohort weeks reach the fixed analytical
+0.2 lice/fish threshold; the rate depends on flags and coverage. The prespecified warm/cold
+comparison averages +20.87 percentage points across 31 matched farms, with a nominal farm-cluster
+95% interval of +12.85 to +28.70. This is exploratory: same-period overlap is sparse and pooled
+temperature/lice correlations are weak, so neither causation, legal compliance nor forecasting
+ability is established. The [EDA report](docs/eda_report.md) documents all findings and limitations.
 
 After activating the virtual environment:
 
@@ -264,8 +268,13 @@ jupyter nbconvert --to notebook --execute --inplace notebooks/m4_eda.ipynb
 python notebooks/check_m4_reproducibility.py
 ```
 
-Edit `notebooks/m4_cagatay.py` / the future `notebooks/m4_egemen.py` source cells, then rebuild the notebook.
+Edit `notebooks/m4_cagatay.py` / `notebooks/m4_egemen.py` source cells, then rebuild the notebook.
 The executed notebook uses a read-only connection and hashes all 17 M2/M3 tables. Fresh-build verification
 also checks identical results and PNGs. Parameters, flag filters and a cumulative look log are recorded
-in its outputs and `docs/evidence/m4_*.json`. Three Cagatay figures exist; the final M4 headline figure,
-four-to-eight-figure collection and completion status will be added after Egemen's stage.
+in its outputs and `docs/evidence/m4_*.json`. Six figures cover shape, coverage, time, relationships
+and the clustered comparison. The [look log](docs/evidence/m4_look_log.json) records 121 configuration
+looks, not 121 independent tests. Authoritative full outputs are [m4_results.json](docs/evidence/m4_results.json)
+and [m4_verification.json](docs/evidence/m4_verification.json); older Cagatay-named paths remain compatible.
+
+`python notebooks/package_m4.py` prepares the ignored local `output/m4_submission/` folder with the
+built database, raw ZIP, repository URL and verification manifest. It does not tag or upload the project.
