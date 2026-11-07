@@ -69,3 +69,79 @@ def within_group(rows,keys):
         mx=np.mean([r['temperature'] for r in members]); my=np.mean([r['lice'] for r in members])
         residuals.extend(dict(r,temperature=float(r['temperature']-mx),lice=float(r['lice']-my)) for r in members)
     return residuals
+
+
+def regime(row,params):
+    value=row['temperature']
+    if params.cold_range_c[0]<=value<params.cold_range_c[1]:
+        return 'cold'
+    if params.warm_range_c[0]<=value<params.warm_range_c[1]:
+        return 'warm'
+    return None
+
+
+def pooled_difference(rows,params,threshold):
+    output={}
+    for label in ('cold','warm'):
+        values=[r['lice'] for r in rows if regime(r,params)==label]
+        output['n_'+label]=len(values)
+        output['share_'+label]=float(np.mean(np.asarray(values)>=threshold)) if values else None
+    output['difference']=output['share_warm']-output['share_cold'] if output['n_cold'] and output['n_warm'] else None
+    return output
+
+
+def clustered_comparison(con,params,threshold,*,strict=False):
+    rows=paired_reports(con,params,strict=strict)
+    flags=params.strict_lice_flags if strict else params.primary_lice_flags
+    eligible={(r['locality_no'],r['year']) for r in coverage(con,params,flags=flags,threshold=threshold)
+              if r['eligible'] and r['year']<=params.end_year}
+    base=[r for r in rows if (r['locality_no'],r['year']) in eligible and regime(r,params)]
+    groups=defaultdict(list)
+    for row in base:
+        groups[(row['locality_no'],row['year'])].append(row)
+    paired_years=[]
+    for (number,year),members in sorted(groups.items()):
+        estimate=pooled_difference(members,params,threshold)
+        if min(estimate['n_cold'],estimate['n_warm'])>=params.min_regime_weeks:
+            paired_years.append(dict(estimate,locality_no=number,year=year))
+    by_farm=defaultdict(list)
+    for estimate in paired_years:
+        by_farm[estimate['locality_no']].append(estimate['difference'])
+    farm_differences=[{'locality_no':number,'paired_years':len(values),'difference':float(np.mean(values))}
+                      for number,values in sorted(by_farm.items())]
+    differences=np.asarray([r['difference'] for r in farm_differences])
+    mean=float(np.mean(differences)) if len(differences) else None
+    interval=None
+    if len(differences)>=2:
+        rng=np.random.default_rng(params.seed)
+        draws=rng.choice(differences,size=(params.bootstrap_replicates,len(differences)),replace=True).mean(axis=1)
+        interval=[float(v) for v in np.quantile(draws,[.025,.975])]
+    matched_keys={(r['locality_no'],r['year']) for r in paired_years}
+    matched=[r for r in base if (r['locality_no'],r['year']) in matched_keys]
+    by_year=[]; by_block=[]
+    for year in range(params.start_year,params.end_year+1):
+        by_year.append(dict(pooled_difference([r for r in matched if r['year']==year],params,threshold),year=year))
+    for block in range(1,5):
+        by_block.append(dict(pooled_difference([r for r in matched if min(3,(r['week']-1)//params.time_block_weeks)+1==block],params,threshold),block=block))
+    week_groups=defaultdict(list); season_groups=defaultdict(list)
+    for row in matched:
+        week_groups[(row['year'],row['week'])].append(row)
+        season_groups[(row['locality_no'],row['year'],min(3,(row['week']-1)//params.time_block_weeks)+1)].append(row)
+    common_weeks=[]
+    for (year,week),members in sorted(week_groups.items()):
+        estimate=pooled_difference(members,params,threshold)
+        if min(estimate['n_cold'],estimate['n_warm'])>=params.min_overlap_farms:
+            common_weeks.append(dict(estimate,year=year,week=week))
+    within_season=[]
+    for (number,year,block),members in sorted(season_groups.items()):
+        estimate=pooled_difference(members,params,threshold)
+        if min(estimate['n_cold'],estimate['n_warm'])>=params.min_stratum_regime_weeks:
+            within_season.append(dict(estimate,locality_no=number,year=year,block=block))
+    return {'threshold':threshold,'filter':'strict' if strict else 'primary','qualified_farm_years':len(eligible),
+        'paired_farm_years':len(paired_years),'farms':len(farm_differences),'difference':mean,'interval95':interval,
+        'bootstrap_replicates':params.bootstrap_replicates,'bootstrap_unit':'farm; retain all its paired years; equal farm weight',
+        'farm_years':paired_years,'farm_differences':farm_differences,
+        'unmatched_pooled':pooled_difference(base,params,threshold),'matched_pooled':pooled_difference(matched,params,threshold),
+        'by_year':by_year,'by_block':by_block,'same_year_week':common_weeks,'within_farm_year_block':within_season,
+        'same_year_week_mean':float(np.mean([r['difference'] for r in common_weeks])) if common_weeks else None,
+        'within_farm_year_block_mean':float(np.mean([r['difference'] for r in within_season])) if within_season else None}

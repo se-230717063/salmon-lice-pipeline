@@ -40,6 +40,7 @@ class Parameters:
     warm_range_c: tuple = (12.,16.)
     min_regime_weeks: int = 6  # Require six matched reports in each regime per farm-year.
     min_overlap_farms: int = 3  # Common-week diagnostic requires three farms in each regime.
+    min_stratum_regime_weeks: int = 2  # Thin within-farm/year/season overlap is reported, not generalised.
 
 
 def default_parameters():

@@ -32,6 +32,7 @@ PARAMS = Parameters(
     min_time_farms=20, time_block_weeks=13, min_block_coverage=0.5,
     spring_windows=((16,21),(21,26)), relationship_bin_c=2.0, upper_tail_quantile=0.99,
     cold_range_c=(4.,8.), warm_range_c=(12.,16.), min_regime_weeks=6, min_overlap_farms=3,
+    min_stratum_regime_weeks=2,
 )
 DB_PATH = Path(os.environ.get('M4_DB_PATH',str(ROOT/'data/salmon_lice.db')))
 FIGURE_DIR = Path(os.environ.get('M4_FIGURE_DIR',str(ROOT/'figures')))
