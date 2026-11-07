@@ -205,7 +205,7 @@ ORDER BY FLOOR(t.sea_temperature / 2.0);
 ---
 
 ## Status
-M3 — cleaned layer and quality report complete. Submission tag pending explicit team approval.
+M3 — cleaned layer and quality report complete; submission snapshot tagged `m3`.
 
 ## Data Quality (M3)
 
@@ -244,3 +244,28 @@ database, raw ZIP, final outputs, repository URL and checksum manifest; it does 
 ## Team
 - Çağatay Oruk (GitHub: se-230717041)
 - Mehmet Egemen Karagöz (GitHub: se-230717063)
+
+## Exploration (M4 work in progress)
+
+Cagatay's sections 2.1-2.4 are complete: raw/clean lice frequencies, alternative farm summaries,
+distributions, coverage and flag sensitivity. The primary period is the complete years 2022-2025.
+Read the [interim EDA report](docs/eda_report.md) and [handoff](docs/m4_handoff.md).
+Egemen's time, relationship, interval comparison and final synthesis are pending; M4 is not yet complete.
+
+After activating the virtual environment:
+
+```bash
+python -m pip install -r requirements.txt
+python src/load.py
+python src/clean.py
+python src/validate.py
+python notebooks/build_m4.py
+jupyter nbconvert --to notebook --execute --inplace notebooks/m4_eda.ipynb
+python notebooks/check_m4_reproducibility.py
+```
+
+Edit `notebooks/m4_cagatay.py` / the future `notebooks/m4_egemen.py` source cells, then rebuild the notebook.
+The executed notebook uses a read-only connection and hashes all 17 M2/M3 tables. Fresh-build verification
+also checks identical results and PNGs. Parameters, flag filters and a cumulative look log are recorded
+in its outputs and `docs/evidence/m4_*.json`. Three Cagatay figures exist; the final M4 headline figure,
+four-to-eight-figure collection and completion status will be added after Egemen's stage.
