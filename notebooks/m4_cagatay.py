@@ -11,10 +11,8 @@ import json
 import os
 import sys
 
-ROOT = Path.cwd()
-if not (ROOT/'src/db.py').is_file():
-    ROOT = ROOT.parent
-if not (ROOT/'src/db.py').is_file():
+ROOT = next((p for p in (Path.cwd(),*Path.cwd().parents) if (p/'src/db.py').is_file()),None)
+if ROOT is None:
     raise RuntimeError('Start from the repository root or notebooks directory')
 sys.path.insert(0,str(ROOT/'src'))
 from explore import (Parameters, connect_ro, snapshot_all, query, bindings, coverage,
@@ -43,6 +41,10 @@ con = connect_ro(DB_PATH)
 before = snapshot_all(con)
 look_log = LookLog()
 results = {'parameters':asdict(PARAMS),'scope':'Cagatay sections 2.1-2.4; Egemen sections pending'}
+flag_caption = ' + '.join(PARAMS.primary_lice_flags)
+period_caption = str(PARAMS.start_year)+'-'+str(PARAMS.end_year)
+threshold_caption = ' and '.join(str(t) for t in PARAMS.thresholds)
+coverage_label = f'{100*PARAMS.min_coverage:g}%'
 print(json.dumps(asdict(PARAMS),indent=2))
 print('Read-only database; initial table hashes:',len(before))
 print('Primary period: complete source years 2022-2025; source year/week assumed ISO.')
@@ -120,13 +122,15 @@ print('Shape:',shape_summary)
 fig = plt.figure(figsize=(12,8))
 layout = fig.add_gridspec(2,3)
 hist_axes = []
+common_right = float(np.ceil((values.max()+max(PARAMS.histogram_widths))/max(PARAMS.histogram_widths))*max(PARAMS.histogram_widths))
+common_peak = max(int(np.histogram(values,bins=np.arange(0,common_right+width/2,width))[0].max()) for width in PARAMS.histogram_widths)
 for index,width in enumerate(PARAMS.histogram_widths):
     ax = fig.add_subplot(layout[0,index],sharey=hist_axes[0] if hist_axes else None)
     hist_axes.append(ax)
-    edges = np.arange(0,values.max()+2*width,width)
+    edges = np.arange(0,common_right+width/2,width)
     ax.hist(values,bins=edges,color='#237a97',edgecolor='white',linewidth=.3)
     ax.set(title='Bin width '+str(width)+' lice/fish',xlabel='Adult female lice [lice/fish]',ylabel='Reported weeks [count]')
-    ax.set_xlim(0,edges[-1]); ax.set_ylim(bottom=0)
+    ax.set_xlim(0,common_right); ax.set_ylim(0,common_peak*1.08)
     for threshold in PARAMS.thresholds:
         ax.axvline(threshold,color='#9c4524',linestyle='--',linewidth=1)
     look_log.add('C-HIST-'+str(width),'Does histogram bin width change the apparent lice-count shape?',
@@ -134,15 +138,15 @@ for index,width in enumerate(PARAMS.histogram_widths):
 ax = fig.add_subplot(layout[1,:])
 ordered = np.sort(values)
 ax.step(ordered,np.arange(1,len(ordered)+1)/len(ordered),where='post',color='#237a97')
-ax.set(xlabel='Adult female lice [lice/fish]',ylabel='Cumulative reported share [0-1]',xlim=(0,float(values.max())+.1),ylim=(0,1))
+ax.set(xlabel='Adult female lice [lice/fish]',ylabel='Cumulative reported share [0-1]',xlim=(0,common_right),ylim=(0,1))
 for threshold in PARAMS.thresholds:
     ax.axvline(threshold,color='#9c4524',linestyle='--',label='Analytical >= '+str(threshold))
 ax.legend(loc='lower right')
 save_figure(fig,FIGURE_DIR,'m4_cagatay_shape_overall.png',
             'Typical reports lie below the long upper tail',
             'How do bin choices and a bin-free ECDF describe reported lice counts?',
-            'n='+str(len(values))+' reports; source year/week 2022-2025. Flags: ok + unusual_high + unusual_low.\n'
-            'Available-report denominator; no minimum coverage. Dashed lines: fixed analytical 0.2 and 0.5 lice/fish; not legal limits.')
+            'n='+str(len(values))+' reports; source year/week '+period_caption+'. Flags: '+flag_caption+'.\n'
+            'Available-report denominator; no minimum coverage. Dashed lines: fixed analytical '+threshold_caption+' lice/fish; not legal limits.')
 # %% [markdown]
 # ### Are the yearly distributions interchangeable?
 # Same axes and bin widths across years prevent scale-driven visual differences.
@@ -151,8 +155,9 @@ save_figure(fig,FIGURE_DIR,'m4_cagatay_shape_overall.png',
 years = list(range(PARAMS.start_year,PARAMS.end_year+1))
 fig, axes = plt.subplots(2,len(years),figsize=(14,8),sharex=True,sharey='row',squeeze=False)
 width = PARAMS.selected_histogram_width
-edges = np.arange(0,values.max()+2*width,width)
+edges = np.arange(0,common_right+width/2,width)
 year_shapes = []
+year_peak = 0.
 for column,year in enumerate(years):
     yearly = np.asarray([row['value'] for row in primary_rows if row['year']==year])
     if not len(yearly):
@@ -160,24 +165,27 @@ for column,year in enumerate(years):
             ax.text(.5,.5,'No reports',transform=ax.transAxes,ha='center')
         continue
     year_shapes.append({'year':year,'n':len(yearly),'median':float(np.median(yearly)),'p95':float(np.quantile(yearly,.95))})
+    year_peak = max(year_peak,float(np.histogram(yearly,bins=edges)[0].max()/len(yearly)))
     axes[0,column].hist(yearly,bins=edges,weights=np.ones(len(yearly))/len(yearly),color='#237a97',edgecolor='white',linewidth=.3)
     axes[0,column].set(title=str(year)+'; n='+str(len(yearly)),ylabel='Reported share/bin [0-1]',ylim=(0,None))
     axes[1,column].step(np.sort(yearly),np.arange(1,len(yearly)+1)/len(yearly),where='post',color='#237a97')
     axes[1,column].set(ylabel='Cumulative share [0-1]',ylim=(0,1))
     for ax in axes[:,column]:
         ax.set_xlabel('Adult female lice [lice/fish]')
-        ax.set_xlim(0,edges[-1])
+        ax.set_xlim(0,common_right)
         for threshold in PARAMS.thresholds:
             ax.axvline(threshold,color='#9c4524',linestyle='--',linewidth=.8)
     look_log.add('C-SHAPE-YEAR-'+str(year),'How does the annual lice-count distribution differ?',
                  {'year':year,'n':len(yearly),'histogram_width':width,'flag_filter':list(PARAMS.primary_lice_flags),'coverage_rule':'available reports; no minimum'})
 table(year_shapes,['year','n','median','p95'])
+for ax in axes[0,:]:
+    ax.set_ylim(0,year_peak*1.08)
 results['year_shapes'] = year_shapes
 save_figure(fig,FIGURE_DIR,'m4_cagatay_shape_years.png',
             'Yearly distributions retain low typical counts and an upper tail',
             'Do common-bin histograms and ECDFs tell the same story in each year?',
-            'n by year is printed in each panel; source year/week 2022-2025. Flags: ok + unusual_high + unusual_low.\n'
-            'Available reports; no minimum coverage. Shared scales; width='+str(width)+' lice/fish; dashed analytical thresholds 0.2 and 0.5.')
+            'n by year is printed in each panel; source year/week '+period_caption+'. Flags: '+flag_caption+'.\n'
+            'Available reports; no minimum coverage. Shared scales; width='+str(width)+' lice/fish; dashed analytical thresholds '+threshold_caption+'.')
 # %% [markdown]
 # ## 2.4 Coverage, denominator and flag sensitivity
 # How many calendar reporting opportunities contribute to each farm-year estimate?
@@ -198,14 +206,14 @@ for threshold in PARAMS.thresholds:
     grid = coverage(con,PARAMS,threshold=threshold)
     for label,selected in (
         ('available_reports',[r for r in grid if r['year']<=PARAMS.end_year]),
-        ('coverage_at_least_75pct',[r for r in grid if r['year']<=PARAMS.end_year and r['eligible']]),
+        (f'coverage_at_least_{100*PARAMS.min_coverage:g}pct',[r for r in grid if r['year']<=PARAMS.end_year and r['eligible']]),
     ):
         n = sum(r['n'] for r in selected)
         exceedances = sum(r['reaching_threshold'] for r in selected)
         sensitivity.append({'threshold':threshold,'rule':label,'farm_years':len(selected),'n':n,
                             'reaching_threshold':exceedances,'share':exceedances/n if n else None})
     look_log.add('C-COVERAGE-'+str(threshold),'Does the minimum farm-year reporting rule change the pooled share?',
-                 {'threshold':threshold,'rules':['available_reports','>=75% calendar weeks'],'flag_filter':list(PARAMS.primary_lice_flags)})
+                 {'threshold':threshold,'rules':['available_reports','>='+coverage_label+' calendar weeks'],'flag_filter':list(PARAMS.primary_lice_flags)})
 table(sensitivity,['threshold','rule','farm_years','n','reaching_threshold','share'])
 results['coverage'] = {'grid':coverage_grid,'per_year':year_coverage,'sensitivity':sensitivity}
 coverage_years = sorted({row['year'] for row in coverage_grid})
@@ -226,8 +234,8 @@ colorbar.ax.axhline(PARAMS.min_coverage,color='#9c4524',linewidth=2)
 complete_grid = [r for r in coverage_grid if r['year']<=PARAMS.end_year]
 qualified_count = sum(r['eligible'] for r in complete_grid)
 save_figure(fig,FIGURE_DIR,'m4_cagatay_coverage.png',
-            str(qualified_count)+' of '+str(len(complete_grid))+' complete farm-years meet the 75% rule',
+            str(qualified_count)+' of '+str(len(complete_grid))+' complete farm-years meet the '+coverage_label+' rule',
             'Which locality/year summaries have sufficient calendar reporting coverage?',
-            'Each cell shows n/expected calendar weeks; total n='+str(sum(r['n'] for r in coverage_grid))+'. Flags: ok + unusual_high + unusual_low.\n'
+            'Each cell shows n/expected calendar weeks; total n='+str(sum(r['n'] for r in coverage_grid))+'. Flags: '+flag_caption+'.\n'
             'Source ISO weeks; 2026 ends at week '+str(coverage_grid[-1]['expected_weeks'])+'. Calendar opportunities do not imply active production.\n'
-            'Colour scale 0-1; brown reference mark is the >=75% comparative coverage rule. No interpolation or imputation.')
+            'Colour scale 0-1; brown reference mark is the >='+coverage_label+' comparative coverage rule. No interpolation or imputation.')

@@ -27,7 +27,7 @@ class Parameters:
     min_coverage: float = 0.75  # Require three quarters of calendar weeks for farm-year comparisons.
     histogram_widths: tuple = (0.05, 0.1, 0.2)  # Natural lice/fish units; middle width used in group panels.
     selected_histogram_width: float = 0.1
-    temperature_edges: tuple = (0., 4., 8., 12., 16., 20., 40.)  # Contract for later E-stage inspection, not a fitted choice.
+    temperature_edges: tuple = (-5., 4., 8., 12., 16., 20., 40.)  # Contract for later E-stage inspection, not a fitted choice.
     seed: int = 42
     bootstrap_replicates: int = 2000  # Reserved for Egemen's stage; no interval computed by Cagatay.
 
@@ -140,7 +140,7 @@ def style():
 def save_figure(fig, directory, filename, title, question, caption):
     fig.suptitle(title+'\n'+question,fontsize=13)
     fig.text(.02,.015,caption,fontsize=8,va='bottom',wrap=True)
-    fig.tight_layout(rect=(0,.13,1,.89))
+    fig.tight_layout(rect=(0,.10,1,.96))
     path = directory/filename
     fig.savefig(path,metadata={'Software':'matplotlib'},facecolor='white')
     plt.close(fig)

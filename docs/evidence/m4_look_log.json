@@ -1,0 +1,333 @@
+[
+  {
+    "id": "C-KEY-0.2-raw",
+    "owner": "Cagatay Oruk",
+    "question": "Share of available reports reaching the analytical threshold",
+    "choices": {
+      "layer": "raw",
+      "threshold": 0.2,
+      "flags": [],
+      "period": [
+        2022,
+        2025
+      ],
+      "n": 6004,
+      "coverage_rule": "available reports; no minimum"
+    }
+  },
+  {
+    "id": "C-KEY-0.2-clean_primary",
+    "owner": "Cagatay Oruk",
+    "question": "Share of available reports reaching the analytical threshold",
+    "choices": {
+      "layer": "clean_primary",
+      "threshold": 0.2,
+      "flags": [
+        "ok",
+        "unusual_high",
+        "unusual_low"
+      ],
+      "period": [
+        2022,
+        2025
+      ],
+      "n": 6004,
+      "coverage_rule": "available reports; no minimum"
+    }
+  },
+  {
+    "id": "C-KEY-0.2-clean_strict",
+    "owner": "Cagatay Oruk",
+    "question": "Share of available reports reaching the analytical threshold",
+    "choices": {
+      "layer": "clean_strict",
+      "threshold": 0.2,
+      "flags": [
+        "ok"
+      ],
+      "period": [
+        2022,
+        2025
+      ],
+      "n": 5881,
+      "coverage_rule": "available reports; no minimum"
+    }
+  },
+  {
+    "id": "C-KEY-0.2-raw_matched_strict",
+    "owner": "Cagatay Oruk",
+    "question": "Share of available reports reaching the analytical threshold",
+    "choices": {
+      "layer": "raw_matched_strict",
+      "threshold": 0.2,
+      "flags": [
+        "ok"
+      ],
+      "period": [
+        2022,
+        2025
+      ],
+      "n": 5881,
+      "coverage_rule": "available reports; no minimum"
+    }
+  },
+  {
+    "id": "C-KEY-0.5-raw",
+    "owner": "Cagatay Oruk",
+    "question": "Share of available reports reaching the analytical threshold",
+    "choices": {
+      "layer": "raw",
+      "threshold": 0.5,
+      "flags": [],
+      "period": [
+        2022,
+        2025
+      ],
+      "n": 6004,
+      "coverage_rule": "available reports; no minimum"
+    }
+  },
+  {
+    "id": "C-KEY-0.5-clean_primary",
+    "owner": "Cagatay Oruk",
+    "question": "Share of available reports reaching the analytical threshold",
+    "choices": {
+      "layer": "clean_primary",
+      "threshold": 0.5,
+      "flags": [
+        "ok",
+        "unusual_high",
+        "unusual_low"
+      ],
+      "period": [
+        2022,
+        2025
+      ],
+      "n": 6004,
+      "coverage_rule": "available reports; no minimum"
+    }
+  },
+  {
+    "id": "C-KEY-0.5-clean_strict",
+    "owner": "Cagatay Oruk",
+    "question": "Share of available reports reaching the analytical threshold",
+    "choices": {
+      "layer": "clean_strict",
+      "threshold": 0.5,
+      "flags": [
+        "ok"
+      ],
+      "period": [
+        2022,
+        2025
+      ],
+      "n": 5881,
+      "coverage_rule": "available reports; no minimum"
+    }
+  },
+  {
+    "id": "C-KEY-0.5-raw_matched_strict",
+    "owner": "Cagatay Oruk",
+    "question": "Share of available reports reaching the analytical threshold",
+    "choices": {
+      "layer": "raw_matched_strict",
+      "threshold": 0.5,
+      "flags": [
+        "ok"
+      ],
+      "period": [
+        2022,
+        2025
+      ],
+      "n": 5881,
+      "coverage_rule": "available reports; no minimum"
+    }
+  },
+  {
+    "id": "C-RANK-0.2",
+    "owner": "Cagatay Oruk",
+    "question": "Do frequency, typical burden and upper-tail burden rank farms alike?",
+    "choices": {
+      "threshold": 0.2,
+      "summaries": [
+        "share",
+        "median",
+        "p95"
+      ],
+      "min_farm_year_coverage": 0.75,
+      "n": 3306,
+      "farms": 37,
+      "alternative_no_coverage_n": 6004,
+      "flag_filter": [
+        "ok",
+        "unusual_high",
+        "unusual_low"
+      ]
+    }
+  },
+  {
+    "id": "C-RANK-0.5",
+    "owner": "Cagatay Oruk",
+    "question": "Do frequency, typical burden and upper-tail burden rank farms alike?",
+    "choices": {
+      "threshold": 0.5,
+      "summaries": [
+        "share",
+        "median",
+        "p95"
+      ],
+      "min_farm_year_coverage": 0.75,
+      "n": 3306,
+      "farms": 37,
+      "alternative_no_coverage_n": 6004,
+      "flag_filter": [
+        "ok",
+        "unusual_high",
+        "unusual_low"
+      ]
+    }
+  },
+  {
+    "id": "C-HIST-0.05",
+    "owner": "Cagatay Oruk",
+    "question": "Does histogram bin width change the apparent lice-count shape?",
+    "choices": {
+      "width_lice_per_fish": 0.05,
+      "n": 6004,
+      "flag_filter": [
+        "ok",
+        "unusual_high",
+        "unusual_low"
+      ],
+      "coverage_rule": "available reports; no minimum"
+    }
+  },
+  {
+    "id": "C-HIST-0.1",
+    "owner": "Cagatay Oruk",
+    "question": "Does histogram bin width change the apparent lice-count shape?",
+    "choices": {
+      "width_lice_per_fish": 0.1,
+      "n": 6004,
+      "flag_filter": [
+        "ok",
+        "unusual_high",
+        "unusual_low"
+      ],
+      "coverage_rule": "available reports; no minimum"
+    }
+  },
+  {
+    "id": "C-HIST-0.2",
+    "owner": "Cagatay Oruk",
+    "question": "Does histogram bin width change the apparent lice-count shape?",
+    "choices": {
+      "width_lice_per_fish": 0.2,
+      "n": 6004,
+      "flag_filter": [
+        "ok",
+        "unusual_high",
+        "unusual_low"
+      ],
+      "coverage_rule": "available reports; no minimum"
+    }
+  },
+  {
+    "id": "C-SHAPE-YEAR-2022",
+    "owner": "Cagatay Oruk",
+    "question": "How does the annual lice-count distribution differ?",
+    "choices": {
+      "year": 2022,
+      "n": 1503,
+      "histogram_width": 0.1,
+      "flag_filter": [
+        "ok",
+        "unusual_high",
+        "unusual_low"
+      ],
+      "coverage_rule": "available reports; no minimum"
+    }
+  },
+  {
+    "id": "C-SHAPE-YEAR-2023",
+    "owner": "Cagatay Oruk",
+    "question": "How does the annual lice-count distribution differ?",
+    "choices": {
+      "year": 2023,
+      "n": 1550,
+      "histogram_width": 0.1,
+      "flag_filter": [
+        "ok",
+        "unusual_high",
+        "unusual_low"
+      ],
+      "coverage_rule": "available reports; no minimum"
+    }
+  },
+  {
+    "id": "C-SHAPE-YEAR-2024",
+    "owner": "Cagatay Oruk",
+    "question": "How does the annual lice-count distribution differ?",
+    "choices": {
+      "year": 2024,
+      "n": 1352,
+      "histogram_width": 0.1,
+      "flag_filter": [
+        "ok",
+        "unusual_high",
+        "unusual_low"
+      ],
+      "coverage_rule": "available reports; no minimum"
+    }
+  },
+  {
+    "id": "C-SHAPE-YEAR-2025",
+    "owner": "Cagatay Oruk",
+    "question": "How does the annual lice-count distribution differ?",
+    "choices": {
+      "year": 2025,
+      "n": 1599,
+      "histogram_width": 0.1,
+      "flag_filter": [
+        "ok",
+        "unusual_high",
+        "unusual_low"
+      ],
+      "coverage_rule": "available reports; no minimum"
+    }
+  },
+  {
+    "id": "C-COVERAGE-0.2",
+    "owner": "Cagatay Oruk",
+    "question": "Does the minimum farm-year reporting rule change the pooled share?",
+    "choices": {
+      "threshold": 0.2,
+      "rules": [
+        "available_reports",
+        ">=75% calendar weeks"
+      ],
+      "flag_filter": [
+        "ok",
+        "unusual_high",
+        "unusual_low"
+      ]
+    }
+  },
+  {
+    "id": "C-COVERAGE-0.5",
+    "owner": "Cagatay Oruk",
+    "question": "Does the minimum farm-year reporting rule change the pooled share?",
+    "choices": {
+      "threshold": 0.5,
+      "rules": [
+        "available_reports",
+        ">=75% calendar weeks"
+      ],
+      "flag_filter": [
+        "ok",
+        "unusual_high",
+        "unusual_low"
+      ]
+    }
+  }
+]
