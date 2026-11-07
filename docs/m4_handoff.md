@@ -1,11 +1,11 @@
 # M4 devir: Cagatay -> Egemen
 
-> Arsivlenmis ara asama devir notu. Egemen bolumu de tamamlandi; guncel durum
-> README, eda_report.md ve docs/evidence/m4_results.json icindedir. Asagidaki
-> pending ifadeleri ilk devir anini anlatir. m4 etiketi kullanici talimati bekliyor.
+> Arsivlenmis ara asama devir notu. Her iki bolum tamamlandi; guncel durum
+> README, eda_report.md ve docs/evidence/m4_results.json icindedir.
+> Nihai teslim referansi: `m4`. Asagidaki is bolumu devir aninin kaydidir.
 
-Cagatay'in C1-C4 bolumu tamamlandi. Tam M4 henuz tamamlanmadi; E1-E4 icin kullanici
-yonlendirmesi beklenecek. `m4` etiketi olusturulmadi. `m3` etiketi korunuyor.
+Cagatay'in C1-C4 ve Egemen'in E1-E4 bolumleri tamamlandi.
+M3 teslim surumu `m3` referansinda korunuyor.
 
 ## Kurulum ve tekrar uretme
 
@@ -78,11 +78,11 @@ Sonuclarini `results['egemen']` gibi ayri bir anahtar altina ekle; Cagatay deger
    iliski ve aralik sekilleri eklendiginde en az 6 olacak. Her sekil kontrol listesini uygula.
 5. Temiz kurulum + build + Restart & Run All + hash/sekil kontrollerini yeniden calistir.
    `check_m4_reproducibility.py` butun uretilen PNG'leri ve sonuc JSON'unu karsilastirir.
-   Son footer'in kapsam ve durum metinlerini nihai asamaya gore guncelle. Kullanici
-   acikca istemeden etiket olusturma veya DYS'ye yukleme yapma.
+   Son footer'in kapsam ve durum metinlerini nihai asamaya gore guncelle.
+   DYS paketi `python notebooks/package_m4.py` ile yeniden uretilir.
 
 ## Katki ve kalan durum
 
 Cagatay icin dort anlamli commit: altyapi, hesaplamalar, calistirilmis notebook/sekiller
 ve yeniden uretim kaniti, rapor/devir. Egemen asamasinda da dort anlamli commit hedefleniyor.
-Calisan kaynak dosyalarinda istenmeyen atif ifadeleri temizlendi; yeni etiket olusturulmadi.
+Nihai sonuclar, grafikler ve yeniden uretim kanitlari repoda kayitlidir.

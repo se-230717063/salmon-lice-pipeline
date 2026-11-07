@@ -205,7 +205,7 @@ ORDER BY FLOOR(t.sea_temperature / 2.0);
 ---
 
 ## Status
-M4 — exploratory analysis complete. The M3 submission snapshot remains tagged `m3`.
+M4 — exploratory analysis complete. Submission reference: `m4`; the M3 snapshot remains `m3`.
 
 ## Data Quality (M3)
 

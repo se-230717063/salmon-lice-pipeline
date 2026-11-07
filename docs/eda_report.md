@@ -1,7 +1,7 @@
 # Exploratory Analysis - Salmon Lice Pipeline
 
 > Completed M4 exploration by Cagatay Oruk and Mehmet Egemen Karagoz.
-> Figures and statistics come from the executed notebook; submission tagging awaits instruction.
+> Figures and statistics come from the executed notebook. Submission reference: `m4`.
 
 ## 1. Summary
 

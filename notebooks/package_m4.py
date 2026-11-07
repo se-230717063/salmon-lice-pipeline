@@ -55,9 +55,11 @@ def package():
     (output/'m4_validate.txt').write_text('\n'.join(r['level']+' '+r['id']+' '+r['detail'] for r in validation)+'\n',encoding='utf-8')
     shutil.copyfile(ROOT/'docs/evidence/m4_verification.json',output/'m4_verification.json')
     commit=subprocess.run(['git','rev-parse','HEAD'],cwd=ROOT,check=True,capture_output=True,text=True).stdout.strip()
+    tagged=subprocess.run(['git','rev-parse','--verify','refs/tags/m4^{commit}'],cwd=ROOT,capture_output=True,text=True)
+    submission_tag='m4' if tagged.returncode==0 and tagged.stdout.strip()==commit else None
     names=('salmon_lice.db','raw_data.zip','repository_url.txt','m4_validate.txt','m4_verification.json')
-    manifest={'milestone':'M4','source_commit':commit,'repository':repository,'tag':'Not created; awaiting explicit instruction',
-              'course_upload':'Not performed','required_uploads':['repository_url.txt','salmon_lice.db','raw_data.zip'],
+    manifest={'milestone':'M4','source_commit':commit,'repository':repository,'tag':submission_tag,
+              'required_uploads':['repository_url.txt','salmon_lice.db','raw_data.zip'],
               'validation':dict(Counter(r['level'] for r in validation)),
               'raw_json_files':sum(p.suffix=='.json' for p in raw_files),'figure_count':len(proof['figure_sha256']),
               'sha256':{name:hashlib.sha256((output/name).read_bytes()).hexdigest() for name in names}}
