@@ -54,6 +54,16 @@ def check():
                 else:
                     raise AssertionError('Failure swallowed')
             assert state.read_bytes()==original
+            # A failed atomic publish must not leave a truncated .json behind.
+            with patch.object(ingest.os,'link',side_effect=OSError('fixture publish failure')):
+                try:
+                    ingest.save_raw('lice','interrupted.json',b'[]')
+                except OSError:
+                    pass
+                else:
+                    raise AssertionError('Publish failure swallowed')
+            assert not (directory/'raw/lice/interrupted.json').exists()
+            assert not list((directory/'raw/lice').glob('*.part'))
             urls.clear()
             ingest.ingest(datetime(2022,2,4,tzinfo=timezone.utc),state_path=state,no_dotenv=True)
             assert len(urls)==121 and all('/2022' in url for url in urls[1:])
@@ -68,7 +78,7 @@ def check():
             assert state.read_bytes()==original
     result = {'fixture_only':True,'full_history_replayed_after_outage':True,
               'failed_run_does_not_advance_checkpoint':True,'empty_required_source_rejected':True,
-              'empty_treatment_year_accepted':True}
+              'empty_treatment_year_accepted':True,'failed_publish_leaves_no_partial_json':True}
     (ROOT/'docs/evidence/m5_ingest_checks.json').write_text(json.dumps(result,indent=2)+'\n',encoding='utf-8')
     print(json.dumps(result,indent=2))
 

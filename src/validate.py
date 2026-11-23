@@ -16,7 +16,8 @@ from pipeline_runtime import run_clock
 # Review threshold, not a deletion rule: tolerate occasional gaps, warn when >1/3
 # of expected elapsed weeks have no usable temperature. See cleaning_report section 7.
 MAX_MISSING_SHARE = 0.35
-FRESHNESS_LAG_WEEKS = 1  # Current ISO week is incomplete at retrieval; expect the previous week.
+# Weekly reports are due the following Tuesday. Only expect the immediately
+# preceding week from Wednesday UTC onward (conservative grace for local time).
 FRESHNESS_DAYS = 21  # Weekly period starts + publication delay + one missed reporting week.
 
 # Every paired query has identical source grain/order. No identifier interpolation.
@@ -28,6 +29,24 @@ RAW_PAIRS = {
     'treatment_weekly_clean': ('SELECT * FROM treatment_weekly ORDER BY locality_key, year, week', 'SELECT locality_key, year, week, mechanical_removal_raw, mechanical_removal_entire_locality_raw, record_version, retrieved_at FROM treatment_weekly_clean ORDER BY locality_key, year, week'),
     'treatment_event_clean': ('SELECT * FROM treatment_event ORDER BY locality_key, year, week, category, event_seq', 'SELECT locality_key, year, week, category, event_seq, source_event_id, treatment_type_raw, substance_name_raw, substance_id_raw, number_of_cages_raw, entire_locality, done_before_lice_count, lice_report_id, details_json, retrieved_at FROM treatment_event_clean ORDER BY locality_key, year, week, category, event_seq'),
 }
+
+
+def typical_added_rows(log_path, run_id, clock):
+    """Only earlier non-bootstrap scheduled loads establish a positive baseline."""
+    history = connect(log_path,read_only=True)
+    try:
+        previous = history.execute("SELECT detail FROM pipeline_run WHERE step='src/load.py' AND exit_code=0 AND run_kind='scheduled' AND run_id<>? AND run_time<=? ORDER BY run_time DESC LIMIT 30",
+                                   (run_id,clock.isoformat().replace('+00:00','Z'))).fetchall()
+        positive = []
+        for (detail,) in previous:
+            load = json.loads(detail).get('load')
+            if load and sum(load['before'].values())>0:
+                added = sum(load['after'][k]-load['before'][k] for k in load['after'])
+                if added>0:
+                    positive.append(added)
+        return median(positive) if positive else None
+    finally:
+        history.close()
 
 
 def validate(db_path=DB_PATH, *, run_time=None, volume=None, typical_volume=None):
@@ -62,7 +81,7 @@ def validate(db_path=DB_PATH, *, run_time=None, volume=None, typical_volume=None
                 if value is None:
                     continue
                 try:
-                    valid = math.isfinite(value) and date.fromisocalendar(year,week,1) <= datetime.fromisoformat(stamp.replace('Z','+00:00')).date()
+                    valid = math.isfinite(value) and date.fromisocalendar(year,week,1) <= min(clock.date(),datetime.fromisoformat(stamp.replace('Z','+00:00')).date())
                 except ValueError:
                     valid = False
                 invalid['calendar_or_future_values'] += not valid
@@ -76,13 +95,14 @@ def validate(db_path=DB_PATH, *, run_time=None, volume=None, typical_volume=None
         temperature = con.execute('SELECT l.locality_no, t.year, t.week, t.sea_temperature, t.retrieved_at, t.sea_temperature_flag FROM sea_temperature_weekly_clean t JOIN locality l USING(locality_key)').fetchall()
         shares = defaultdict(lambda:[0,0])
         latest = clock.date()
-        expected = (latest-timedelta(weeks=FRESHNESS_LAG_WEEKS)).isocalendar()[:2]
+        lag_days = 14 if latest.weekday()<2 else 7
+        expected = (latest-timedelta(days=latest.weekday()+lag_days)).isocalendar()[:2]
         current = set()
         for number,year,week,value,stamp,flag in temperature:
             if number not in cohort:
                 continue
             try:
-                elapsed = date.fromisocalendar(year,week,1) <= datetime.fromisoformat(stamp.replace('Z','+00:00')).date()
+                elapsed = date.fromisocalendar(year,week,1) <= min(clock.date(),datetime.fromisoformat(stamp.replace('Z','+00:00')).date())
             except ValueError:
                 elapsed = False
             if elapsed:
@@ -103,11 +123,19 @@ def validate(db_path=DB_PATH, *, run_time=None, volume=None, typical_volume=None
         stale = sorted(number for number in cohort if number not in latest_by_farm or
                        (latest-latest_by_farm[number]).days>FRESHNESS_DAYS)
         record('freshness','WARN',not stale,'Run date '+str(latest)+'; max age '+str(FRESHNESS_DAYS)+' days; stale temperature farms: '+str(stale))
+        lice_latest = {}
+        for number,year,week in con.execute('SELECT l.locality_no,t.year,t.week FROM lice_weekly_clean t JOIN locality l USING(locality_key) WHERE t.avg_adult_female_lice IS NOT NULL'):
+            if number in cohort:
+                day = date.fromisocalendar(year,week,1)
+                lice_latest[number] = max(lice_latest.get(number,day),day)
+        stale_lice = sorted(number for number in cohort if number not in lice_latest or
+                            (latest-lice_latest[number]).days>FRESHNESS_DAYS)
+        record('lice_freshness','WARN',not stale_lice,'Run date '+str(latest)+'; max age '+str(FRESHNESS_DAYS)+' days; stale lice farms: '+str(stale_lice))
         if volume is not None:
             too_large = typical_volume is not None and typical_volume>0 and volume>=10*typical_volume
             # Zero new keys is expected between weekly releases. A stopped source
             # remains a WARN above and an independent monitor ALARM, not hidden here.
-            severity = 'WARN' if stale or too_large else 'INFO'
+            severity = 'WARN' if stale or stale_lice or too_large else 'INFO'
             record('volume',severity,volume>0 and not too_large,
                    'New source rows='+str(volume)+'; typical positive run='+str(typical_volume)+
                    '; zero between weekly releases is INFO only while freshness is within tolerance')
@@ -140,19 +168,7 @@ def main():
             volume = sum(metrics['after'][name]-metrics['before'][name] for name in metrics['after'])
             log_path = os.environ.get('PIPELINE_LOG_DB')
             if log_path:
-                history = connect(log_path,read_only=True)
-                try:
-                    previous = history.execute("SELECT detail FROM pipeline_run WHERE step='src/load.py' AND exit_code=0 AND run_kind='scheduled' ORDER BY run_time DESC LIMIT 30").fetchall()
-                    positive = []
-                    for (detail,) in previous:
-                        load = json.loads(detail).get('load')
-                        if load:
-                            added = sum(load['after'][k]-load['before'][k] for k in load['after'])
-                            if added>0:
-                                positive.append(added)
-                    typical = median(positive) if positive else None
-                finally:
-                    history.close()
+                typical = typical_added_rows(log_path,os.environ.get('PIPELINE_RUN_ID',''),clock)
         results = validate(args.db,run_time=clock,volume=volume,typical_volume=typical)
     except (OSError,sqlite3.Error,ValueError) as exc:
         print('STOP database_read '+str(exc))

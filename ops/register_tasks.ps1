@@ -12,6 +12,6 @@ $triggers = @(
 $settings = New-ScheduledTaskSettingsSet -StartWhenAvailable -WakeToRun -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -MultipleInstances IgnoreNew -ExecutionTimeLimit (New-TimeSpan -Hours 3)
 $principal = New-ScheduledTaskPrincipal -UserId $identity -LogonType S4U -RunLevel Limited
 $task = New-ScheduledTask -Action $action -Trigger $triggers -Settings $settings -Principal $principal -Description 'Salmon lice M5 pipeline; daily 15:15 and 20:15 local time, missed starts recovered.'
-Register-ScheduledTask -TaskName 'SalmonLicePipeline' -InputObject $task -Force | Out-Null
-Export-ScheduledTask -TaskName 'SalmonLicePipeline' | Set-Content -LiteralPath (Join-Path $PSScriptRoot 'task_scheduler.xml') -Encoding Unicode
-Get-ScheduledTaskInfo -TaskName 'SalmonLicePipeline' | Select-Object LastRunTime,NextRunTime,LastTaskResult
+Register-ScheduledTask -TaskName 'SalmonLicePipeline' -InputObject $task -Force -ErrorAction Stop | Out-Null
+Export-ScheduledTask -TaskName 'SalmonLicePipeline' -ErrorAction Stop | Set-Content -LiteralPath (Join-Path $PSScriptRoot 'task_scheduler.xml') -Encoding Unicode
+Get-ScheduledTaskInfo -TaskName 'SalmonLicePipeline' -ErrorAction Stop | Select-Object LastRunTime,NextRunTime,LastTaskResult

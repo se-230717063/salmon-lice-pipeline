@@ -2,6 +2,7 @@
 import argparse
 import json
 import os
+import sqlite3
 from pathlib import Path
 import subprocess
 import sys
@@ -110,7 +111,7 @@ def main():
         parser.error("Run log must be separate from the data database")
     try:
         raise SystemExit(run_pipeline(args))
-    except (OSError, ValueError) as exc:
+    except (OSError, ValueError, sqlite3.Error) as exc:
         print("Pipeline FAILED: runner infrastructure: " + str(exc))
         raise SystemExit(1)
 

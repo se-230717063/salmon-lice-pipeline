@@ -51,6 +51,7 @@ output/m4_submission/
 data/pipeline_log.db
 data/pipeline.lock
 data/ingest_state.json
+data/ingest_state.tmp
 logs/
 tmp/m5/
 output/m5_submission/

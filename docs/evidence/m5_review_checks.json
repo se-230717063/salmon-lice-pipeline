@@ -1,0 +1,11 @@
+{
+  "zero_weekly_growth_info_while_both_feeds_fresh": true,
+  "monday_coverage_respects_following_tuesday_deadline": true,
+  "both_feed_freshness_uses_run_clock": true,
+  "future_values_relative_to_run_clock_stop": true,
+  "missing_sources_fail_without_changing_existing_db": true,
+  "volume_baseline_excludes_current_and_bootstrap": true,
+  "tenfold_volume_warns": true,
+  "failed_treatment_revision_restores_source_and_clean_events": true,
+  "revised_treatment_list_removes_obsolete_keys_without_fk_failure": true
+}

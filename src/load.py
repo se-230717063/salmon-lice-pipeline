@@ -374,8 +374,12 @@ def write_all(con, data, quarantine, tick):
 def run_load(db_path=DB_PATH, raw_dir=RAW_DIR, fail_after_rows=None, quiet=False):
     con = connect(db_path, create=True)
     try:
-        init_schema(con)  # before the transaction: executescript would commit an open one
         best, quarantine, stats, seen, stamps = collect(raw_dir)
+        if not all(best[kind] for kind in ('localities','lice','temperature')):
+            raise ValueError('Required locality/lice/temperature raw records are missing; refusing a partial build')
+        if not any(SERIES_FILE.match(p.name) for p in (raw_dir/'treatments').glob('*.json')):
+            raise ValueError('Treatment source files are missing (valid empty arrays are allowed)')
+        init_schema(con)  # before the transaction: executescript would commit an open one
         before = table_counts(con)
         localities_before = {row[0] for row in con.execute(SELECT_LOCALITY_NOS)}
         known = localities_before | set(best["localities"])
@@ -391,6 +395,8 @@ def run_load(db_path=DB_PATH, raw_dir=RAW_DIR, fail_after_rows=None, quiet=False
 
         with con:  # one transaction: commit on success, roll back on any exception
             write_all(con, data, quarantine, tick)
+            if con.execute(FK_CHECK).fetchall():
+                raise ValueError('Foreign-key check failed before commit')
 
         after = table_counts(con)
         localities_after = {row[0] for row in con.execute(SELECT_LOCALITY_NOS)}

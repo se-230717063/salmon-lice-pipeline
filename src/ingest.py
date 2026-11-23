@@ -3,9 +3,11 @@ import argparse
 from collections import Counter
 import hashlib
 import json
+import os
 from pathlib import Path
 import sys
 import time
+import uuid
 
 from dotenv import load_dotenv
 from api_client import STATUS_COUNTS, TokenManager, make_request
@@ -38,8 +40,16 @@ def save_raw(folder, name, content):
         if path.read_bytes()!=content:
             raise ValueError('Same retrieval clock has different response bytes: '+str(path))
         return False
-    with path.open('xb') as stream:
-        stream.write(content)
+    temporary = path.with_name(path.name+'.'+uuid.uuid4().hex+'.part')
+    try:
+        with temporary.open('xb') as stream:
+            stream.write(content)
+            stream.flush()
+            os.fsync(stream.fileno())
+        # Atomic publish without overwrite. Interrupted writes never become .json.
+        os.link(temporary,path)
+    finally:
+        temporary.unlink(missing_ok=True)
     return True
 
 
@@ -56,9 +66,9 @@ def fetch_and_store(tokens, stats, folder, url, stem, stamp):
         raise ValueError('Unexpected source shape: '+url)
     if not rows and folder in ('localities','temperature'):
         raise ValueError('Unexpected empty required source: '+url)
-    if folder!='localities' and any(not isinstance(row.get('week'),int) or not 1<=row['week']<=53 for row in rows):
+    if folder!='localities' and any(type(row.get('week')) is not int or not 1<=row['week']<=53 for row in rows):
         raise ValueError('Missing or invalid source week: '+url)
-    if folder=='localities' and any(not isinstance(row.get('localityNo'),int) for row in rows):
+    if folder=='localities' and any(type(row.get('localityNo')) is not int for row in rows):
         raise ValueError('Missing locality identity: '+url)
     stats['saved'] += save_raw(folder,stem+'_'+stamp+'.json',response.content)
     stats['rows'] += len(rows)
@@ -70,6 +80,8 @@ def ingest(clock, *, state_path, no_dotenv=False):
     if not no_dotenv:
         load_dotenv(ROOT/'.env')
     cohort = [int(value) for value in COHORT_FILE.read_text().split()]
+    if not cohort or len(cohort)!=len(set(cohort)):
+        raise ValueError('Cohort must be nonempty and unique')
     request_count = 1+len(cohort)*len(ENDPOINTS)*(clock.year-FIRST_YEAR+1)
     if clock.year<FIRST_YEAR or request_count>MAX_REQUESTS:
         raise ValueError('Catch-up exceeds configured history/request budget; no partial fetch permitted')

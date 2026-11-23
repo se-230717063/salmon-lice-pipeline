@@ -4,55 +4,55 @@
   "all_17_table_hashes": {
     "municipality": {
       "rows": 371,
-      "sha256": "b2b6bca5a4b276092dc34a815a4d81a0b3514bc105bc756dd458d252ec26ed99"
+      "sha256": "7c935818beb5a2138f7bd0fd8774f8c5e97114b692034bfac4c95eaf92098792"
     },
     "locality": {
-      "rows": 2710,
-      "sha256": "9a93afdbad6aa8efd002151650467911abf2bb722fe4847b1eaa3b3a2154041b"
+      "rows": 2717,
+      "sha256": "baa6b204eaa82fdc137e0940bd261895a2f4823cb31882630f4a4fec5d344dbe"
     },
     "lice_weekly": {
-      "rows": 6951,
-      "sha256": "1063d99d5a96ddb0182df9a182595385ad46227114ba615b49acb0b45586c007"
+      "rows": 7111,
+      "sha256": "15cd4f1265072ab9564950272aaf1e82f800eeac17dcff12cf2ded19fcd5678f"
     },
     "sea_temperature_weekly": {
       "rows": 10440,
-      "sha256": "e32aacaff66b7818582805fdd5be9723f4e4dfd68e583f6915211a9a701370d8"
+      "sha256": "8d6727b76d3f2140f1bdbd8467e2166006de22fccb26505f14d33c0a16b5cc3e"
     },
     "treatment_weekly": {
-      "rows": 816,
-      "sha256": "9ad4e7dc2751f40a1a5bf822bdcfb8e080ead475b8269a90a80b90f7cada0db1"
+      "rows": 837,
+      "sha256": "d6fc3c9011d287529880fd58b1daac78fec82c0a0e5f948fade9184fffc5f488"
     },
     "treatment_event": {
-      "rows": 889,
-      "sha256": "0decd245968d7d5ec7a42fe0e1a5726684e59c79afc57fd14e48024489dfbdfb"
+      "rows": 910,
+      "sha256": "703a1f4e1e6f7e84627934c5742f517228aaf6d99b9213667e7524ab2438fb58"
     },
     "quarantine": {
       "rows": 0,
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
     },
     "lice_weekly_clean": {
-      "rows": 6951,
-      "sha256": "91673ff589e5465b2f4e48cb31ef1fa8a8be5a5d7ec5678b3989dfc4fedf3cc3"
+      "rows": 7111,
+      "sha256": "95dbb3e58bfa926cc7c6ed070411233b5881b658caf774cd533d1561a4f31e93"
     },
     "sea_temperature_weekly_clean": {
       "rows": 10440,
-      "sha256": "6a37587d55fac5216df0305077addcc98188d2768c2dfd6d544606d553548a8c"
+      "sha256": "45ad6f46d4c045b5667ecb566f77e8c3211d60936513b9550bba5a2af09708ba"
     },
     "municipality_clean": {
       "rows": 371,
-      "sha256": "edfc66878c6a385e8d201ddef913487b25b3ab7e5f6533235fa8896e991136e0"
+      "sha256": "30076eed3f6b2b6eb9bd1372b0140bf0df71249d9d2d82637d016be9df1b8af6"
     },
     "locality_clean": {
-      "rows": 2710,
-      "sha256": "7470befbb1db5526764605c30e0fc0cd422cc75508b8791a2317517fee2e7cc2"
+      "rows": 2717,
+      "sha256": "56c964d0babe7a6f6b824320dcc1111081fc0520d0943ea3fd36b7dc801cc443"
     },
     "treatment_weekly_clean": {
-      "rows": 816,
-      "sha256": "6de35853df2cb70d00e3eca65b10fa7aa081361d46e04378717e6f82cb1a529e"
+      "rows": 837,
+      "sha256": "ba49ee96e3262e07d84ca7637cc3cc524e7c171d9f02c0e8915c8d47ff2c1149"
     },
     "treatment_event_clean": {
-      "rows": 889,
-      "sha256": "4edb0b0bd0bd9be190e5be913070ef7097fa2b62364419f22789330502448d78"
+      "rows": 910,
+      "sha256": "84a3d2184592c4315bc3e5dafb1e0237a9f064e48f4834e9d92fd7400daf9faa"
     },
     "municipality_name_mapping": {
       "rows": 0,
@@ -72,10 +72,10 @@
     }
   },
   "rebuild_seconds": [
-    5.737667999987025,
-    6.135545199998887
+    7.182111100002658,
+    7.124076199979754
   ],
-  "full_reload_seconds": 3.7104682000062894,
+  "full_reload_seconds": 4.976854099979391,
   "older_raw_cannot_undo_newer_value": true,
   "m4_fresh_notebook_exit_code": 0,
   "m4_readonly_tables_unchanged": true,

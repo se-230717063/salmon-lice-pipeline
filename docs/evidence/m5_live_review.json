@@ -1,0 +1,114 @@
+{
+  "run_id": "1a30ea7b5e4b4526b752ede762b5c5e0",
+  "run_time": "2026-11-23T11:47:23Z",
+  "run_kind": "manual",
+  "counts_as_scheduled_evidence": false,
+  "steps": [
+    {
+      "step": "src/ingest.py",
+      "started_at": "2026-11-23T11:47:23Z",
+      "finished_at": "2026-11-23T11:57:50Z",
+      "exit_code": 0,
+      "seconds": 627.0
+    },
+    {
+      "step": "src/load.py",
+      "started_at": "2026-11-23T11:57:50Z",
+      "finished_at": "2026-11-23T11:57:55Z",
+      "exit_code": 0,
+      "seconds": 5.0
+    },
+    {
+      "step": "src/clean.py",
+      "started_at": "2026-11-23T11:57:55Z",
+      "finished_at": "2026-11-23T11:57:56Z",
+      "exit_code": 0,
+      "seconds": 1.0
+    },
+    {
+      "step": "src/validate.py",
+      "started_at": "2026-11-23T11:57:56Z",
+      "finished_at": "2026-11-23T11:57:56Z",
+      "exit_code": 0,
+      "seconds": 0.0
+    }
+  ],
+  "total_seconds": 633.0,
+  "source_table_counts": {
+    "municipality": 371,
+    "locality": 2717,
+    "lice_weekly": 7111,
+    "sea_temperature_weekly": 10440,
+    "treatment_weekly": 837,
+    "treatment_event": 910,
+    "quarantine": 0
+  },
+  "scheduled_runs_so_far": 0,
+  "post_review_validation": [
+    {
+      "id": "row_counts",
+      "level": "PASS",
+      "detail": "All six cleaned tables equal their source row counts"
+    },
+    {
+      "id": "raw_preservation",
+      "level": "PASS",
+      "detail": "Changed keys/raw/provenance: []"
+    },
+    {
+      "id": "impossible_values",
+      "level": "PASS",
+      "detail": "{'negative_lice': 0, 'temperature_range': 0, 'negative_cages': 0, 'invalid_flag_with_value': 0, 'lice_invalid_flag_with_value': 0, 'calendar_or_future_values': 0}"
+    },
+    {
+      "id": "foreign_keys",
+      "level": "PASS",
+      "detail": "No M2/M3 foreign-key violations"
+    },
+    {
+      "id": "strict_schema",
+      "level": "PASS",
+      "detail": "Non-STRICT tables: []"
+    },
+    {
+      "id": "missing_share",
+      "level": "INFO",
+      "detail": "Historical coverage limitation (not an operational incident); elapsed temperature NULL share > 0.35: {10292: 0.3711, 10324: 0.4609, 10328: 0.3555, 11405: 0.3906, 12652: 0.4375, 12855: 0.3516, 20559: 0.3789, 29816: 0.3555, 30517: 0.4648, 31497: 0.4609, 33617: 0.4102, 35377: 0.3711}"
+    },
+    {
+      "id": "weekly_coverage",
+      "level": "INFO",
+      "detail": "Run-clock expected (2026, 46) at 2026-11-23; usable 25/40; reporting obligation/stock status unknown; missing [10324, 10328, 11290, 11312, 11922, 12652, 12660, 20559, 31497, 31557, 31757, 33197, 33617, 35377, 36737]"
+    },
+    {
+      "id": "freshness",
+      "level": "WARN",
+      "detail": "Run date 2026-11-23; max age 21 days; stale temperature farms: [10324, 10328, 11290, 11312, 11922, 12652, 12660, 20559, 31497, 31557, 31757, 33197, 33617, 35377, 36737]"
+    },
+    {
+      "id": "lice_freshness",
+      "level": "WARN",
+      "detail": "Run date 2026-11-23; max age 21 days; stale lice farms: [10324, 10328, 11290, 11312, 11922, 12652, 12660, 20559, 31497, 31557, 31757, 33197, 33617, 35377, 36737]"
+    },
+    {
+      "id": "sequence_review",
+      "level": "INFO",
+      "detail": "Reviewed retained suspect measurements: [('suspect_spike', 6), ('suspect_stuck', 31)]"
+    },
+    {
+      "id": "ambiguous_substance_code",
+      "level": "INFO",
+      "detail": "93 reviewed medicinal events have non-identifying substance code 0; names preserved"
+    },
+    {
+      "id": "unknown_cages",
+      "level": "INFO",
+      "detail": "204 reviewed non-wrapper interventions have unknown cage counts"
+    },
+    {
+      "id": "mapping_matches",
+      "level": "PASS",
+      "detail": "Unused mapping entries: []"
+    }
+  ]
+}

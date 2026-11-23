@@ -7,6 +7,7 @@ import subprocess
 import sys
 import tempfile
 import time
+from datetime import timedelta
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT/'src'))
@@ -15,6 +16,7 @@ from db import DB_PATH, connect
 from explore import snapshot_all
 from load import run_load, UPSERT_LICE
 from build_m4 import build
+from pipeline_runtime import iso_time, parse_time
 
 
 def check():
@@ -54,8 +56,9 @@ def check():
         con = connect(target)
         assert snapshot_all(con)==hashes[0], 'M4 changed DB'
         row = con.execute('SELECT locality_key,year,week,avg_adult_female_lice,retrieved_at FROM lice_weekly LIMIT 1').fetchone()
+        correction_stamp = iso_time(parse_time(row[4])+timedelta(seconds=1))
         with con:
-            con.execute(UPSERT_LICE,(*row[:3],.123456,'2026-11-23T11:59:00Z'))
+            con.execute(UPSERT_LICE,(*row[:3],.123456,correction_stamp))
         con.close()
         start = time.perf_counter()
         run_load(target,quiet=True)
@@ -63,7 +66,7 @@ def check():
         con = connect(target,read_only=True)
         kept = con.execute('SELECT avg_adult_female_lice,retrieved_at FROM lice_weekly WHERE locality_key=? AND year=? AND week=?',row[:3]).fetchone()
         con.close()
-        assert kept==(.123456,'2026-11-23T11:59:00Z'), kept
+        assert kept==(.123456,correction_stamp), kept
         source = connect(DB_PATH,read_only=True)
         assert snapshot_all(source)==original
         source.close()
