@@ -1,0 +1,36 @@
+{
+  "interpretation": "Archive ages are not publication delays. No certified maximum publication/revision lag is inferred.",
+  "strategy": "Re-fetch all annual slices from 2022 every run; overlap is the entire supported project history.",
+  "sources": {
+    "lice": {
+      "retrievals": 400,
+      "first_retrieval": "2026-10-10T18:09:54Z",
+      "last_retrieval": "2026-10-10T18:25:38Z",
+      "max_archive_age_days": 1741,
+      "min_archive_age_days": 5,
+      "keys_with_repeated_observations": 6951,
+      "keys_with_observed_revision": 0,
+      "empty_annual_arrays": 6
+    },
+    "temperature": {
+      "retrievals": 400,
+      "first_retrieval": "2026-10-10T18:09:55Z",
+      "last_retrieval": "2026-10-10T18:25:38Z",
+      "max_archive_age_days": 1741,
+      "min_archive_age_days": 5,
+      "keys_with_repeated_observations": 10440,
+      "keys_with_observed_revision": 0,
+      "empty_annual_arrays": 0
+    },
+    "treatments": {
+      "retrievals": 400,
+      "first_retrieval": "2026-10-10T18:09:55Z",
+      "last_retrieval": "2026-10-10T18:25:39Z",
+      "max_archive_age_days": 1741,
+      "min_archive_age_days": 12,
+      "keys_with_repeated_observations": 816,
+      "keys_with_observed_revision": 0,
+      "empty_annual_arrays": 76
+    }
+  }
+}

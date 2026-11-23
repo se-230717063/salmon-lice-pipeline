@@ -1,0 +1,7 @@
+{
+  "fixture_only": true,
+  "full_history_replayed_after_outage": true,
+  "failed_run_does_not_advance_checkpoint": true,
+  "empty_required_source_rejected": true,
+  "empty_treatment_year_accepted": true
+}

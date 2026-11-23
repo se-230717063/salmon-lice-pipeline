@@ -6,7 +6,7 @@ provider: BarentsWatch / Mattilsynet
 url: https://developer.barentswatch.no/docs/fishhealth
 access_method: Public REST/JSON API, OAuth2 client-credentials token required
 licence: NLOD (Norwegian Licence for Open Government Data)
-terms_notes: Data levert av BarentsWatch og Mattilsynet. (Committed to .gitignore as precaution pending full terms verification).
+terms_notes: Data levert av BarentsWatch og Mattilsynet. NLOD attribution and sequential batch retrieval reviewed for M5; see docs/m5_ingest_design.md. Raw files remain outside Git.
 update_cadence: Weekly
 coverage: 2022-2026, active sites across Norway.
 record_meaning: one row = metadata for one fish farm locality
