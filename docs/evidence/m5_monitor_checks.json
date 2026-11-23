@@ -1,0 +1,68 @@
+{
+  "fixture_only": true,
+  "baseline_all_four_pass_and_db_unchanged": true,
+  "last_success_alarm": {
+    "check": "last_success",
+    "status": "ALARM",
+    "detail": {
+      "latest_complete_scheduled": null,
+      "max_age_hours": 26,
+      "latest_attempt_has_failure": true,
+      "future_clock_run_ids": []
+    }
+  },
+  "gaps_alarm_two_slots": {
+    "check": "gaps",
+    "status": "ALARM",
+    "detail": {
+      "missing_scheduled_slots": [
+        "2026-11-23T17:15:00Z",
+        "2026-11-24T12:15:00Z"
+      ],
+      "grace_minutes": 30,
+      "lookback_days": 7
+    }
+  },
+  "completeness_alarm": {
+    "check": "completeness",
+    "status": "ALARM",
+    "detail": {
+      "expected_status_cells": 160,
+      "periods": [
+        [
+          2026,
+          43
+        ],
+        [
+          2026,
+          44
+        ],
+        [
+          2026,
+          45
+        ],
+        [
+          2026,
+          46
+        ]
+      ],
+      "missing_count": 1,
+      "missing_examples": [
+        [
+          45025,
+          2026,
+          43,
+          "reported_measurement_missing"
+        ]
+      ],
+      "explicit_nonreports": 0,
+      "rule": "40 weekly statuses; measurements required when source has_reported=1; nonreport is never zero"
+    }
+  },
+  "freshness_alarm": {
+    "status": "ALARM",
+    "stale_entities": 40
+  },
+  "alarm_cli_exit_1_four_lines": true,
+  "production_database_unchanged": true
+}
