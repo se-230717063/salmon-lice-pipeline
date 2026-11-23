@@ -52,6 +52,8 @@ data/pipeline_log.db
 data/pipeline.lock
 data/ingest_state.json
 data/ingest_state.tmp
+data/missed_drill_state.json
+output/m5_experiment/
 logs/
 tmp/m5/
 output/m5_submission/
