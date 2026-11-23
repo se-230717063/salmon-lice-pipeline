@@ -6,6 +6,7 @@
   "missing_sources_fail_without_changing_existing_db": true,
   "volume_baseline_excludes_current_and_bootstrap": true,
   "tenfold_volume_warns": true,
+  "explicit_nonreport_info_does_not_hide_whole_feed_or_old_status": true,
   "failed_treatment_revision_restores_source_and_clean_events": true,
   "revised_treatment_list_removes_obsolete_keys_without_fk_failure": true
 }

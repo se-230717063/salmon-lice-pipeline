@@ -1,0 +1,105 @@
+{
+  "checked_at": "2026-11-23T12:30:43Z",
+  "run_summary": {
+    "runs": [
+      {
+        "run_id": "1a30ea7b5e4b4526b752ede762b5c5e0",
+        "run_time": "2026-11-23T11:47:23Z",
+        "kind": "manual",
+        "fully_successful_live": true,
+        "failed_steps": []
+      },
+      {
+        "run_id": "36c8409a3e2a47e087a760b0262705a0",
+        "run_time": "2026-11-23T12:15:01Z",
+        "kind": "scheduled",
+        "fully_successful_live": true,
+        "failed_steps": []
+      }
+    ],
+    "scheduled_successes": 1,
+    "scheduled_local_dates": [
+      "2026-11-23"
+    ],
+    "longest_consecutive_local_days": 1,
+    "first_scheduled_success": "2026-11-23T12:15:01Z",
+    "last_scheduled_success": "2026-11-23T12:15:01Z"
+  },
+  "validation": [
+    {
+      "id": "row_counts",
+      "level": "PASS",
+      "detail": "All six cleaned tables equal their source row counts"
+    },
+    {
+      "id": "raw_preservation",
+      "level": "PASS",
+      "detail": "Changed keys/raw/provenance: []"
+    },
+    {
+      "id": "impossible_values",
+      "level": "PASS",
+      "detail": "{'negative_lice': 0, 'temperature_range': 0, 'negative_cages': 0, 'invalid_flag_with_value': 0, 'lice_invalid_flag_with_value': 0, 'calendar_or_future_values': 0}"
+    },
+    {
+      "id": "foreign_keys",
+      "level": "PASS",
+      "detail": "No M2/M3 foreign-key violations"
+    },
+    {
+      "id": "strict_schema",
+      "level": "PASS",
+      "detail": "Non-STRICT tables: []"
+    },
+    {
+      "id": "missing_share",
+      "level": "INFO",
+      "detail": "Historical coverage limitation (not an operational incident); elapsed temperature NULL share > 0.35: {10292: 0.3711, 10324: 0.4609, 10328: 0.3555, 11405: 0.3906, 12652: 0.4375, 12855: 0.3516, 20559: 0.3789, 29816: 0.3555, 30517: 0.4648, 31497: 0.4609, 33617: 0.4102, 35377: 0.3711}"
+    },
+    {
+      "id": "weekly_coverage",
+      "level": "INFO",
+      "detail": "Run-clock expected (2026, 46) at 2026-11-23; usable 25/40; reporting obligation/stock status unknown; missing [10324, 10328, 11290, 11312, 11922, 12652, 12660, 20559, 31497, 31557, 31757, 33197, 33617, 35377, 36737]"
+    },
+    {
+      "id": "freshness",
+      "level": "INFO",
+      "detail": "Stale temperature farms: [10324, 10328, 11290, 11312, 11922, 12652, 12660, 20559, 31497, 31557, 31757, 33197, 33617, 35377, 36737]; recent source explicitly reports no data: [10324, 10328, 11290, 11312, 11922, 12652, 12660, 20559, 31497, 31557, 31757, 33197, 33617, 35377, 36737]; unexplained: []; stock status unknown; monitor still alarms on stale values"
+    },
+    {
+      "id": "temperature_feed_freshness",
+      "level": "PASS",
+      "detail": "At run date 2026-11-23 at least one measured temperature must be within 21 days"
+    },
+    {
+      "id": "lice_freshness",
+      "level": "INFO",
+      "detail": "Stale lice farms: [10324, 10328, 11290, 11312, 11922, 12652, 12660, 20559, 31497, 31557, 31757, 33197, 33617, 35377, 36737]; recent source explicitly reports no data: [10324, 10328, 11290, 11312, 11922, 12652, 12660, 20559, 31497, 31557, 31757, 33197, 33617, 35377, 36737]; unexplained: []; stock status unknown; monitor still alarms on stale values"
+    },
+    {
+      "id": "lice_feed_freshness",
+      "level": "PASS",
+      "detail": "At run date 2026-11-23 at least one measured lice value must be within 21 days"
+    },
+    {
+      "id": "sequence_review",
+      "level": "INFO",
+      "detail": "Reviewed retained suspect measurements: [('suspect_spike', 6), ('suspect_stuck', 31)]"
+    },
+    {
+      "id": "ambiguous_substance_code",
+      "level": "INFO",
+      "detail": "93 reviewed medicinal events have non-identifying substance code 0; names preserved"
+    },
+    {
+      "id": "unknown_cages",
+      "level": "INFO",
+      "detail": "204 reviewed non-wrapper interventions have unknown cage counts"
+    },
+    {
+      "id": "mapping_matches",
+      "level": "PASS",
+      "detail": "Unused mapping entries: []"
+    }
+  ]
+}

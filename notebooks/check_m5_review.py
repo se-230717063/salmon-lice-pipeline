@@ -4,6 +4,7 @@ import csv
 from pathlib import Path
 import sys
 import tempfile
+from datetime import timedelta
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT/'src'))
@@ -11,7 +12,7 @@ from db import connect, snapshot
 from load import run_load
 from load import SimulatedFailure
 from clean import run_clean
-from validate import validate, typical_added_rows
+from validate import validate, typical_added_rows, freshness_groups
 from pipeline_runtime import run_clock
 from run_pipeline import CREATE_LOG, INSERT_LOG
 
@@ -84,6 +85,15 @@ def check():
         checks = {r['id']:r for r in validate(target,run_time=clock,volume=100,typical_volume=10)}
         assert checks['volume']['level']=='WARN'
         result['tenfold_volume_warns'] = True
+        declared_clock = run_clock('2026-11-23T12:00Z')
+        old = declared_clock.date()-timedelta(days=40)
+        groups = freshness_groups({1:old,2:declared_clock.date()},[1,2],{1:(0,'2026-11-23T12:00:00Z')},declared_clock)
+        assert groups==([1],[1],[],False)
+        groups = freshness_groups({1:old},[1],{1:(0,'2026-11-23T12:00:00Z')},declared_clock)
+        assert groups[-1] is True
+        groups = freshness_groups({1:old,2:declared_clock.date()},[1,2],{1:(0,'2026-11-01T12:00:00Z')},declared_clock)
+        assert groups[2]==[1]
+        result['explicit_nonreport_info_does_not_hide_whole_feed_or_old_status'] = True
         con = connect(target,read_only=True)
         original_raw = snapshot(con)
         original_clean_events = con.execute('SELECT * FROM treatment_event_clean').fetchall()

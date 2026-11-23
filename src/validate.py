@@ -19,6 +19,7 @@ MAX_MISSING_SHARE = 0.35
 # Weekly reports are due the following Tuesday. Only expect the immediately
 # preceding week from Wednesday UTC onward (conservative grace for local time).
 FRESHNESS_DAYS = 21  # Weekly period starts + publication delay + one missed reporting week.
+STATUS_CONFIRMATION_HOURS = 48  # Explicit nonreport must come from a recent source poll; never infer inactivity.
 
 # Every paired query has identical source grain/order. No identifier interpolation.
 RAW_PAIRS = {
@@ -47,6 +48,21 @@ def typical_added_rows(log_path, run_id, clock):
         return median(positive) if positive else None
     finally:
         history.close()
+
+
+def freshness_groups(latest_by_farm, cohort, statuses, clock):
+    stale = sorted(number for number in cohort if number not in latest_by_farm or
+                   (clock.date()-latest_by_farm[number]).days>FRESHNESS_DAYS)
+    declared = []
+    for number in stale:
+        reported,stamp = statuses.get(number,(None,None))
+        if reported==0 and stamp:
+            hours = (clock-datetime.fromisoformat(stamp.replace('Z','+00:00'))).total_seconds()/3600
+            if 0<=hours<=STATUS_CONFIRMATION_HOURS:
+                declared.append(number)
+    unexplained = sorted(set(stale)-set(declared))
+    whole_feed_old = not latest_by_farm or (clock.date()-max(latest_by_farm.values())).days>FRESHNESS_DAYS
+    return stale,declared,unexplained,whole_feed_old
 
 
 def validate(db_path=DB_PATH, *, run_time=None, volume=None, typical_volume=None):
@@ -97,6 +113,8 @@ def validate(db_path=DB_PATH, *, run_time=None, volume=None, typical_volume=None
         latest = clock.date()
         lag_days = 14 if latest.weekday()<2 else 7
         expected = (latest-timedelta(days=latest.weekday()+lag_days)).isocalendar()[:2]
+        statuses = {number:(reported,stamp) for number,reported,stamp in con.execute(
+            'SELECT l.locality_no,t.has_reported,t.retrieved_at FROM sea_temperature_weekly t JOIN locality l USING(locality_key) WHERE t.year=? AND t.week=?',expected)}
         current = set()
         for number,year,week,value,stamp,flag in temperature:
             if number not in cohort:
@@ -120,22 +138,24 @@ def validate(db_path=DB_PATH, *, run_time=None, volume=None, typical_volume=None
             if number in cohort and value is not None:
                 day = date.fromisocalendar(year,week,1)
                 latest_by_farm[number] = max(latest_by_farm.get(number,day),day)
-        stale = sorted(number for number in cohort if number not in latest_by_farm or
-                       (latest-latest_by_farm[number]).days>FRESHNESS_DAYS)
-        record('freshness','WARN',not stale,'Run date '+str(latest)+'; max age '+str(FRESHNESS_DAYS)+' days; stale temperature farms: '+str(stale))
+        stale,declared,unexplained,temp_feed_old = freshness_groups(latest_by_farm,cohort,statuses,clock)
+        record('freshness','WARN' if unexplained or temp_feed_old else 'INFO',not stale,
+               'Stale temperature farms: '+str(stale)+'; recent source explicitly reports no data: '+str(declared)+'; unexplained: '+str(unexplained)+'; stock status unknown; monitor still alarms on stale values')
+        record('temperature_feed_freshness','WARN',not temp_feed_old,'At run date '+str(latest)+' at least one measured temperature must be within '+str(FRESHNESS_DAYS)+' days')
         lice_latest = {}
         for number,year,week in con.execute('SELECT l.locality_no,t.year,t.week FROM lice_weekly_clean t JOIN locality l USING(locality_key) WHERE t.avg_adult_female_lice IS NOT NULL'):
             if number in cohort:
                 day = date.fromisocalendar(year,week,1)
                 lice_latest[number] = max(lice_latest.get(number,day),day)
-        stale_lice = sorted(number for number in cohort if number not in lice_latest or
-                            (latest-lice_latest[number]).days>FRESHNESS_DAYS)
-        record('lice_freshness','WARN',not stale_lice,'Run date '+str(latest)+'; max age '+str(FRESHNESS_DAYS)+' days; stale lice farms: '+str(stale_lice))
+        stale_lice,declared_lice,unexplained_lice,lice_feed_old = freshness_groups(lice_latest,cohort,statuses,clock)
+        record('lice_freshness','WARN' if unexplained_lice or lice_feed_old else 'INFO',not stale_lice,
+               'Stale lice farms: '+str(stale_lice)+'; recent source explicitly reports no data: '+str(declared_lice)+'; unexplained: '+str(unexplained_lice)+'; stock status unknown; monitor still alarms on stale values')
+        record('lice_feed_freshness','WARN',not lice_feed_old,'At run date '+str(latest)+' at least one measured lice value must be within '+str(FRESHNESS_DAYS)+' days')
         if volume is not None:
             too_large = typical_volume is not None and typical_volume>0 and volume>=10*typical_volume
             # Zero new keys is expected between weekly releases. A stopped source
             # remains a WARN above and an independent monitor ALARM, not hidden here.
-            severity = 'WARN' if stale or stale_lice or too_large else 'INFO'
+            severity = 'WARN' if unexplained or unexplained_lice or temp_feed_old or lice_feed_old or too_large else 'INFO'
             record('volume',severity,volume>0 and not too_large,
                    'New source rows='+str(volume)+'; typical positive run='+str(typical_volume)+
                    '; zero between weekly releases is INFO only while freshness is within tolerance')

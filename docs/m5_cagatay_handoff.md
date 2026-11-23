@@ -48,13 +48,15 @@ spanning all four separate processes.
 
 ## Review regressions
 
-`python notebooks/check_m5_review.py` verifies nine cases: fresh weekly zero
+`python notebooks/check_m5_review.py` verifies ten cases: fresh weekly zero
 growth is INFO, both feed clocks can become stale, future values cause STOP,
 missing raw sources fail without changing existing rows, the volume baseline
 excludes the current run and bootstrap, tenfold volume warns, a late treatment
 revision failure restores both layers, and successful list replacement removes
 obsolete event keys without breaking foreign keys, and Monday's coverage target
-allows the preceding week's Tuesday reporting deadline. See
+allows the preceding week's Tuesday reporting deadline. It also verifies that a
+recent explicit nonreport can be INFO without hiding a whole-feed stop or an old
+status response. See
 `docs/evidence/m5_review_checks.json`.
 
 Raw JSON publication uses a private `.part` file and an atomic exclusive link.
@@ -73,21 +75,21 @@ contains 1,805 JSON files. This is manual evidence and is **not** a scheduled da
 The updated archive also passes two offline runner builds with identical 17-table
 hashes and a real M4 notebook execution with six figures and unchanged DB contents.
 
-Two freshness WARNs remain, covering the same 15 farms in lice and temperature.
-All source requests succeeded, but recent measurements are absent for those farms.
-The registry endpoint does not expose stock/production status, so inactivity cannot
-be asserted. This is an unresolved operational interpretation, not an authentication
-failure. Do not widen the age threshold or silence these checks merely to obtain
-green output. Before final M5 submission, investigate the reporting expectation or
-document a justified classification; the current code does not claim every feed
-entity is fresh or that M5's no-permanent-WARN requirement is fully satisfied.
+The initial review found two freshness WARNs for the same 15 farms. Egemen's
+subsequent investigation found that exactly those farms have `has_reported=0` for
+the latest due week in the recently refreshed source response. This is now a
+documented INFO classification, not an assertion that production stopped. A status
+older than 48 hours, a missing status, or unexplained stale data remains WARN;
+both whole-feed clocks also remain WARN-capable. The independent monitor continues
+to ALARM on these farms' old measured values. See `docs/pipeline.md` and
+`docs/evidence/m5_operational_status.json` for the current operational result.
 
 ## Operations to complete
 
-Monitor, its independent task, six drill documentation and the real missed-start
-experiment belong to Egemen's next stage. No real missed-start recovery has yet
-been demonstrated. Confirm the actual 15:15/20:15 scheduled results before claiming
-scheduled operational success. Task XML is an
+The first actual scheduled pipeline completed on November 23. Egemen's monitor,
+independent task and completed failure drills are documented in `docs/pipeline.md`.
+The real missed-start experiment is scheduled for November 24-25; its recovery
+has not yet happened. Continue collecting seven days of real evidence. Task XML is an
 export of the registered Windows S4U task; wake timers depend on machine support.
 After power loss, inspect a leftover lock and its PID before removing it; do not
 automatically steal a lock that may belong to a still-running writer.
