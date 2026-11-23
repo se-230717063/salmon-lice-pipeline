@@ -1,0 +1,17 @@
+{
+  "tested_commit": "e8dd91dca38169d71541585bcc8ce77efe9d70e0",
+  "run_time": "2026-11-23T12:31:58Z",
+  "fresh_git_clone": true,
+  "offline_runner_exit_code": 0,
+  "m4_notebook_exit_code": 0,
+  "m4_all_17_tables_unchanged": true,
+  "source_fingerprint": {
+    "sha256": "efc5e37355bcccbc4b48a3c6fd346e06eacd22538a0af1886909cb569efa2b48",
+    "files": 56
+  },
+  "raw_fingerprint": {
+    "sha256": "1f6f1b7701e7873cbc4fe6047559043ddb43ca57a1bcdbed3a764f4c98f38c73",
+    "files": 2406
+  },
+  "figure_count": 6
+}

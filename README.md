@@ -205,7 +205,8 @@ ORDER BY FLOOR(t.sea_temperature / 2.0);
 ---
 
 ## Status
-M4 — exploratory analysis complete. Submission reference: `m4`; the M3 snapshot remains `m3`.
+M5 — pipeline running on a schedule since 2026-11-23 on Cagatay's Windows machine.
+M4 exploration is complete at `m4`; the M3 snapshot remains `m3`.
 
 ## Data Quality (M3)
 
@@ -278,3 +279,39 @@ and [m4_verification.json](docs/evidence/m4_verification.json); older Cagatay-na
 
 `python notebooks/package_m4.py` prepares the ignored local `output/m4_submission/` folder with the
 built database, raw ZIP, repository URL and verification manifest. It does not tag or upload the project.
+
+## Pipeline (M5)
+
+```bash
+python src/run_pipeline.py                # ingest, load, clean, validate
+python src/run_pipeline.py --skip-ingest  # rebuild from landed raw, no network
+python src/monitor.py                     # independent PASS/ALARM checks
+```
+
+Windows schedules the pipeline at **15:15 and 20:15 Europe/Istanbul**, and the independent
+monitor at **15:50 and 20:50**. Actual task exports are in `ops/task_scheduler.xml` and
+`ops/monitor_scheduler.xml`. Missed-start recovery and wake timers are enabled; the computer
+still needs power and internet. `--run-time` fixes the pipeline's UTC decision clock.
+
+The runner stops on the first nonzero step, records the failure in `data/pipeline_log.db`,
+and never runs later steps on a failed predecessor. Timeouts exit 124; overlapping runs exit 75.
+The separate monitor detects missed slots and stale data even when the runner did not run.
+Current source-confirmed nonreports are INFO in validation; the monitor still raises a freshness
+ALARM for old measured values. See [pipeline design, operations and evidence](docs/pipeline.md).
+
+The controlled missed-run experiment skips Nov 24's 20:15 and Nov 25's 15:15 pipeline slots;
+the independent monitor remains active and the Nov 25 evening run resumes ingestion.
+Its one-off task definitions and recovery safeguards are under `ops/`.
+
+```bash
+python notebooks/check_m5_runner.py
+python notebooks/check_m5_monitor.py
+python notebooks/check_m5_drills.py
+python notebooks/check_m5_clone.py
+python notebooks/package_m5.py          # non-final local preview
+python notebooks/package_m5.py --final  # requires real seven-day/recovery/clone evidence
+```
+
+Before final submission update the report's real run-log summary and paste the tag-day monitor
+output. The package includes the separate run-log DB, built DB, raw ZIP and repository URL;
+it does not create a tag or upload to DYS. Keep the schedule running after submission.
