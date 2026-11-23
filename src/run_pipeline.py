@@ -60,6 +60,8 @@ def run_pipeline(args):
         output_dir.mkdir(parents=True)
         environment = dict(os.environ, PYTHONUNBUFFERED="1", PYTHONUTF8="1",
                            PIPELINE_RUN_ID=run_id, PIPELINE_LOG_DB=str(args.log_db.resolve()))
+        metrics = output_dir/'load_metrics.json'
+        environment['PIPELINE_METRICS'] = str(metrics)
         for step in STEPS[1:] if args.skip_ingest else STEPS:
             command = [sys.executable, step, "--run-time", clock]
             if step != "src/ingest.py":
@@ -73,6 +75,8 @@ def run_pipeline(args):
             code = run_step(command, timeout=args.timeout, output=output, environment=environment)
             detail = {"output": output.relative_to(ROOT).as_posix(), "command": command,
                       "expected_steps": list(STEPS[1:] if args.skip_ingest else STEPS)}
+            if step=='src/load.py' and code==0 and metrics.exists():
+                detail['load'] = json.loads(metrics.read_text(encoding='utf-8'))
             with log:
                 log.execute(INSERT_LOG, (run_id, clock, step, started, wall_time(), code,
                                          kind, json.dumps(detail)))

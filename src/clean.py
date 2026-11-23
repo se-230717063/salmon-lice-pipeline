@@ -56,7 +56,7 @@ def category_builder():
     return module.build_categories
 
 
-def run_clean(db_path=DB_PATH, *, fail_after_rows=None, quiet=False, require_categories=False):
+def run_clean(db_path=DB_PATH, *, fail_after_rows=None, quiet=False, require_categories=False, run_time=None):
     if not Path(db_path).is_file():
         raise FileNotFoundError("M2 database not found; run python src/load.py first")
     builder = category_builder()
@@ -75,8 +75,8 @@ def run_clean(db_path=DB_PATH, *, fail_after_rows=None, quiet=False, require_cat
         con.execute("BEGIN IMMEDIATE")
         with con:
             before = snapshot(con)
-            lice, lice_flags = clean_rows(con.execute(SELECT_LICE).fetchall(), "lice")
-            temperature, temp_flags = clean_rows(con.execute(SELECT_TEMP).fetchall(), "temperature")
+            lice, lice_flags = clean_rows(con.execute(SELECT_LICE).fetchall(), "lice", run_time)
+            temperature, temp_flags = clean_rows(con.execute(SELECT_TEMP).fetchall(), "temperature", run_time)
             # Transactional migration of the clean-only event flag vocabulary.
             # Source treatment_event is never dropped or modified.
             con.execute("DROP TABLE IF EXISTS treatment_event_clean")
@@ -122,8 +122,8 @@ def main():
     parser.add_argument("--require-categories", action="store_true", help="Final integration guard; fails until Egemen's module exists")
     args = parser.parse_args()
     try:
-        run_clock(args.run_time)
-        run_clean(args.db, require_categories=args.require_categories)
+        clock = run_clock(args.run_time)
+        run_clean(args.db, require_categories=args.require_categories, run_time=clock)
     except Exception as exc:
         print(f"ERROR: {type(exc).__name__}: {exc}")
         raise SystemExit(1)

@@ -9,6 +9,7 @@ Only what loading requires is transformed (types, timestamps, keys). Cleaning is
 import argparse
 import json
 import math
+import os
 import re
 import sys
 from collections import Counter
@@ -328,6 +329,7 @@ def prepare(best, known, cleaned, quarantine):
 
 # ---------------------------------------------------------------- 3. write (inside one transaction)
 def write_all(con, data, quarantine, tick):
+    has_clean_events = con.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='treatment_event_clean'").fetchone() is not None
     for number, (name, stamp) in sorted(data["municipalities"].items()):
         con.execute(UPSERT_MUNICIPALITY, (number, name, stamp))
         tick()
@@ -354,6 +356,10 @@ def write_all(con, data, quarantine, tick):
             continue  # the database already holds this retrieval or a newer one
         con.execute(UPSERT_TREATMENT, (key, year, week, removal, removal_all, version, stamp))
         tick()
+        if has_clean_events:
+            # A revised nested list can remove source event keys. Remove dependent
+            # derived rows in this same transaction; clean.py rebuilds them next.
+            con.execute('DELETE FROM treatment_event_clean WHERE locality_key=? AND year=? AND week=?', (key,year,week))
         con.execute(DELETE_EVENTS, (key, year, week))  # replace the whole list of this week
         for event in events:
             con.execute(UPSERT_EVENT, (key, year, week) + event + (stamp,))
@@ -438,7 +444,10 @@ def main():
         if not any((args.raw_dir/'localities').glob('*.json')):
             raise ValueError('No landed locality files; refusing an empty build')
         result = run_load(db_path=args.db, raw_dir=args.raw_dir)
-    except Exception:
+        if os.environ.get('PIPELINE_METRICS'):
+            Path(os.environ['PIPELINE_METRICS']).write_text(json.dumps(result),encoding='utf-8')
+    except Exception as exc:
+        print('ERROR:',type(exc).__name__,str(exc))
         sys.exit(1)
     sys.exit(0 if result["ok"] else 1)
 

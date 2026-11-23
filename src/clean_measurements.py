@@ -14,7 +14,7 @@ def quantile(values, fraction):
     return values[lower] + (values[upper] - values[lower]) * (position - lower)
 
 
-def initial_rule(row, kind):
+def initial_rule(row, kind, run_time=None):
     """row = (locality_key, year, week, raw_value, retrieved_at[, has_reported])."""
     _, year, week, raw, retrieved_at, *extra = row
     try:
@@ -22,6 +22,8 @@ def initial_rule(row, kind):
     except ValueError:
         return None, "invalid_iso_week", None
     retrieved = datetime.fromisoformat(retrieved_at.replace("Z", "+00:00")).date()
+    if run_time is not None:
+        retrieved = min(retrieved, run_time.date())
     if day > retrieved:
         flag = "future_placeholder" if kind == "temperature" and raw is None and extra[0] == 0 else "future_observation"
         return None, flag, day
@@ -42,7 +44,7 @@ def initial_rule(row, kind):
     return raw, "ok", day
 
 
-def clean_rows(rows, kind):
+def clean_rows(rows, kind, run_time=None):
     """Return inserts in input order, plus mutually exclusive flag counts.
 
     Statistics use valid observations within each existing M2 locality identity.
@@ -51,7 +53,7 @@ def clean_rows(rows, kind):
     prepared = []
     grouped = defaultdict(list)
     for row in rows:
-        value, flag, day = initial_rule(row, kind)
+        value, flag, day = initial_rule(row, kind, run_time)
         item = {"row": row, "value": value, "flag": flag, "day": day}
         prepared.append(item)
         grouped[row[0]].append(item)

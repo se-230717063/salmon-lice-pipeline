@@ -3,6 +3,9 @@ import argparse
 from collections import defaultdict
 from datetime import date, datetime, timedelta
 import math
+import json
+import os
+from statistics import median
 from pathlib import Path
 import sqlite3
 
@@ -14,6 +17,7 @@ from pipeline_runtime import run_clock
 # of expected elapsed weeks have no usable temperature. See cleaning_report section 7.
 MAX_MISSING_SHARE = 0.35
 FRESHNESS_LAG_WEEKS = 1  # Current ISO week is incomplete at retrieval; expect the previous week.
+FRESHNESS_DAYS = 21  # Weekly period starts + publication delay + one missed reporting week.
 
 # Every paired query has identical source grain/order. No identifier interpolation.
 RAW_PAIRS = {
@@ -26,7 +30,8 @@ RAW_PAIRS = {
 }
 
 
-def validate(db_path=DB_PATH):
+def validate(db_path=DB_PATH, *, run_time=None, volume=None, typical_volume=None):
+    clock = run_time or run_clock()
     results = []
 
     def record(identifier, severity, passed, detail):
@@ -70,7 +75,7 @@ def validate(db_path=DB_PATH):
         cohort = {int(v) for v in (ROOT/'config/cohort.txt').read_text().split()}
         temperature = con.execute('SELECT l.locality_no, t.year, t.week, t.sea_temperature, t.retrieved_at, t.sea_temperature_flag FROM sea_temperature_weekly_clean t JOIN locality l USING(locality_key)').fetchall()
         shares = defaultdict(lambda:[0,0])
-        latest = max(datetime.fromisoformat(row[4].replace('Z','+00:00')).date() for row in temperature)
+        latest = clock.date()
         expected = (latest-timedelta(weeks=FRESHNESS_LAG_WEEKS)).isocalendar()[:2]
         current = set()
         for number,year,week,value,stamp,flag in temperature:
@@ -87,15 +92,31 @@ def validate(db_path=DB_PATH):
                 current.add(number)
         high_missing = {number:round(shares[number][0]/shares[number][1],4) if shares[number][1] else 1.0 for number in sorted(cohort)
                         if not shares[number][1] or shares[number][0]/shares[number][1] > MAX_MISSING_SHARE}
-        record('missing_share','WARN',not high_missing,'Elapsed temperature NULL share > '+str(MAX_MISSING_SHARE)+': '+str(high_missing))
+        record('missing_share','INFO',not high_missing,'Historical coverage limitation (not an operational incident); elapsed temperature NULL share > '+str(MAX_MISSING_SHARE)+': '+str(high_missing))
         absent = sorted(cohort-current)
-        record('freshness','WARN',not absent,'Expected '+str(expected)+' at retrieval '+str(latest)+'; usable '+str(len(current))+'/40; missing '+str(absent))
+        record('weekly_coverage','INFO',not absent,'Run-clock expected '+str(expected)+' at '+str(latest)+'; usable '+str(len(current))+'/40; reporting obligation/stock status unknown; missing '+str(absent))
+        latest_by_farm = {}
+        for number,year,week,value,stamp,flag in temperature:
+            if number in cohort and value is not None:
+                day = date.fromisocalendar(year,week,1)
+                latest_by_farm[number] = max(latest_by_farm.get(number,day),day)
+        stale = sorted(number for number in cohort if number not in latest_by_farm or
+                       (latest-latest_by_farm[number]).days>FRESHNESS_DAYS)
+        record('freshness','WARN',not stale,'Run date '+str(latest)+'; max age '+str(FRESHNESS_DAYS)+' days; stale temperature farms: '+str(stale))
+        if volume is not None:
+            too_large = typical_volume is not None and typical_volume>0 and volume>=10*typical_volume
+            # Zero new keys is expected between weekly releases. A stopped source
+            # remains a WARN above and an independent monitor ALARM, not hidden here.
+            severity = 'WARN' if stale or too_large else 'INFO'
+            record('volume',severity,volume>0 and not too_large,
+                   'New source rows='+str(volume)+'; typical positive run='+str(typical_volume)+
+                   '; zero between weekly releases is INFO only while freshness is within tolerance')
         sequences = con.execute("SELECT sea_temperature_flag,COUNT(*) FROM sea_temperature_weekly_clean WHERE sea_temperature_flag IN ('suspect_stuck','suspect_spike') GROUP BY sea_temperature_flag").fetchall()
-        record('sequence_review','WARN',not sequences,'Retained suspect measurements: '+str(sequences))
+        record('sequence_review','INFO',not sequences,'Reviewed retained suspect measurements: '+str(sequences))
         ambiguous = con.execute("SELECT COUNT(*) FROM treatment_event_clean WHERE substance_id_flag='ambiguous_code'").fetchone()[0]
-        record('ambiguous_substance_code','WARN',ambiguous==0,str(ambiguous)+' medicinal events have non-identifying substance code 0; names preserved')
+        record('ambiguous_substance_code','INFO',ambiguous==0,str(ambiguous)+' reviewed medicinal events have non-identifying substance code 0; names preserved')
         unknown_cages = con.execute("SELECT COUNT(*) FROM treatment_event_clean WHERE number_of_cages_flag='missing_unknown'").fetchone()[0]
-        record('unknown_cages','WARN',unknown_cages==0,str(unknown_cages)+' non-wrapper interventions have unknown cage counts')
+        record('unknown_cages','INFO',unknown_cages==0,str(unknown_cages)+' reviewed non-wrapper interventions have unknown cage counts')
         unused = con.execute('SELECT m.locality_no,m.raw_name FROM locality_name_mapping m LEFT JOIN locality l ON l.locality_no=m.locality_no AND l.name=m.raw_name WHERE l.locality_no IS NULL').fetchall()
         unused += con.execute('SELECT m.municipality_no,m.raw_name FROM municipality_name_mapping m LEFT JOIN municipality r ON r.municipality_no=m.municipality_no AND r.name=m.raw_name WHERE r.municipality_no IS NULL').fetchall()
         unused += con.execute("SELECT m.field,m.raw_value FROM treatment_value_mapping m WHERE NOT EXISTS (SELECT 1 FROM treatment_event t WHERE (m.field='category' AND t.category=m.raw_value) OR (m.field='treatment_type' AND t.treatment_type=m.raw_value) OR (m.field='substance_name' AND t.substance_name=m.raw_value) OR (m.field='substance_id' AND t.substance_id=m.raw_value))").fetchall()
@@ -111,8 +132,28 @@ def main():
     parser.add_argument('--run-time')
     args = parser.parse_args()
     try:
-        run_clock(args.run_time)
-        results = validate(args.db)
+        clock = run_clock(args.run_time)
+        volume, typical = None, None
+        metrics_path = os.environ.get('PIPELINE_METRICS')
+        if metrics_path and Path(metrics_path).is_file():
+            metrics = json.loads(Path(metrics_path).read_text(encoding='utf-8'))
+            volume = sum(metrics['after'][name]-metrics['before'][name] for name in metrics['after'])
+            log_path = os.environ.get('PIPELINE_LOG_DB')
+            if log_path:
+                history = connect(log_path,read_only=True)
+                try:
+                    previous = history.execute("SELECT detail FROM pipeline_run WHERE step='src/load.py' AND exit_code=0 AND run_kind='scheduled' ORDER BY run_time DESC LIMIT 30").fetchall()
+                    positive = []
+                    for (detail,) in previous:
+                        load = json.loads(detail).get('load')
+                        if load:
+                            added = sum(load['after'][k]-load['before'][k] for k in load['after'])
+                            if added>0:
+                                positive.append(added)
+                    typical = median(positive) if positive else None
+                finally:
+                    history.close()
+        results = validate(args.db,run_time=clock,volume=volume,typical_volume=typical)
     except (OSError,sqlite3.Error,ValueError) as exc:
         print('STOP database_read '+str(exc))
         raise SystemExit(1)

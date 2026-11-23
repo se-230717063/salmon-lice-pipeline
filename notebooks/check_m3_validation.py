@@ -32,7 +32,7 @@ def checks(db_path=DB_PATH):
                 ('strict_schema','CREATE TABLE deliberately_non_strict (value TEXT)',()),
             ):
                 target = Path(directory)/(identifier+'.db')
-                con = connect(target)
+                con = connect(target,create=True)
                 source.backup(con)
                 con.execute('PRAGMA foreign_keys=OFF')
                 with con:
@@ -49,7 +49,7 @@ def checks(db_path=DB_PATH):
             evidence.append({'check':'database_read','result':'PASS','exit_code':missing.returncode,'observed':missing.stdout.strip()})
 
             target = Path(directory)/'late_category_failure.db'
-            con = connect(target)
+            con = connect(target,create=True)
             source.backup(con)
             con.close()
             try:
