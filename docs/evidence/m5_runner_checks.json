@@ -1,0 +1,7 @@
+{
+  "failure_code_and_no_later_step": true,
+  "timeout_124_logged": true,
+  "concurrent_75_no_step_logged": true,
+  "strict_required_log_columns": true,
+  "wrong_db_path_rejected": true
+}

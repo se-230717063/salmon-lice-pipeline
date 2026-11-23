@@ -30,7 +30,7 @@ def package():
         if archive.testzip() is not None:
             raise RuntimeError('Raw ZIP integrity failure')
     source = connect(DB_PATH,read_only=True)
-    target = connect(output/'salmon_lice.db')
+    target = connect(output/'salmon_lice.db',create=True)
     try:
         source.backup(target)
         if target.execute('PRAGMA integrity_check').fetchone()[0]!='ok':

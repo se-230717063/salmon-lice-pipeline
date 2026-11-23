@@ -6,14 +6,17 @@ Reads local files only and never calls the API. Properties:
   parameterised  every value reaches SQL through a placeholder
 Only what loading requires is transformed (types, timestamps, keys). Cleaning is M3.
 """
+import argparse
 import json
 import math
 import re
 import sys
 from collections import Counter
 from datetime import datetime
+from pathlib import Path
 
 from db import DB_PATH, ROOT, connect, init_schema, table_counts
+from pipeline_runtime import run_clock
 
 RAW_DIR = ROOT / "data" / "raw"
 LOCALITY_FILE = re.compile(r"^localities_(?P<stamp>\d{8}T\d{6}Z)\.json$")
@@ -84,7 +87,8 @@ UPSERT_EVENT = (
     "number_of_cages = excluded.number_of_cages, entire_locality = excluded.entire_locality, "
     "done_before_lice_count = excluded.done_before_lice_count, "
     "lice_report_id = excluded.lice_report_id, details_json = excluded.details_json, "
-    "retrieved_at = excluded.retrieved_at"
+    "retrieved_at = excluded.retrieved_at "
+    "WHERE excluded.retrieved_at > treatment_event.retrieved_at"
 )
 INSERT_QUARANTINE = (
     "INSERT INTO quarantine (source_kind, source_file, reason, raw_payload, retrieved_at) "
@@ -362,7 +366,7 @@ def write_all(con, data, quarantine, tick):
 
 # ---------------------------------------------------------------- 4. orchestration and summary
 def run_load(db_path=DB_PATH, raw_dir=RAW_DIR, fail_after_rows=None, quiet=False):
-    con = connect(db_path)
+    con = connect(db_path, create=True)
     try:
         init_schema(con)  # before the transaction: executescript would commit an open one
         best, quarantine, stats, seen, stamps = collect(raw_dir)
@@ -424,8 +428,16 @@ def print_summary(stats, seen, best, stamps, before, after, cleaned, new_localit
 
 
 def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--db', type=Path, default=DB_PATH)
+    parser.add_argument('--raw-dir', type=Path, default=RAW_DIR)
+    parser.add_argument('--run-time')
+    args = parser.parse_args()
     try:
-        result = run_load()
+        run_clock(args.run_time)
+        if not any((args.raw_dir/'localities').glob('*.json')):
+            raise ValueError('No landed locality files; refusing an empty build')
+        result = run_load(db_path=args.db, raw_dir=args.raw_dir)
     except Exception:
         sys.exit(1)
     sys.exit(0 if result["ok"] else 1)

@@ -46,3 +46,11 @@ output/m3_submission/
 # Disposable M4 fresh builds, kernel logs and figures from verification runs
 tmp/m4/
 output/m4_submission/
+
+# M5 operational state and disposable proofs
+data/pipeline_log.db
+data/pipeline.lock
+data/ingest_state.json
+logs/
+tmp/m5/
+output/m5_submission/

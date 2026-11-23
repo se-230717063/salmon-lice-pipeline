@@ -29,15 +29,17 @@ SNAPSHOT_SQL = {
 }
 
 
-def connect(db_path=DB_PATH, *, read_only=False):
-    """Open the database and turn on foreign-key enforcement immediately."""
+def connect(db_path=DB_PATH, *, read_only=False, create=False):
+    """Existing DB by default; builders opt in to creation explicitly."""
     if sqlite3.sqlite_version_info < MIN_SQLITE:
         raise RuntimeError(f"SQLite {sqlite3.sqlite_version} is too old; STRICT needs 3.37+")
-    if read_only:
-        con = sqlite3.connect(Path(db_path).resolve().as_uri() + "?mode=ro", uri=True)
-    else:
+    if create and not read_only:
         Path(db_path).parent.mkdir(parents=True, exist_ok=True)
         con = sqlite3.connect(db_path)
+    else:
+        uri = Path(db_path).resolve().as_uri()
+        uri += "?mode=ro" if read_only else "?mode=rw"
+        con = sqlite3.connect(uri, uri=True)
     con.execute("PRAGMA foreign_keys = ON")
     return con
 

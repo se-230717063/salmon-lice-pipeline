@@ -8,6 +8,7 @@ import sqlite3
 
 import clean_config
 from db import DB_PATH, ROOT, connect
+from pipeline_runtime import run_clock
 
 # Review threshold, not a deletion rule: tolerate occasional gaps, warn when >1/3
 # of expected elapsed weeks have no usable temperature. See cleaning_report section 7.
@@ -107,8 +108,10 @@ def validate(db_path=DB_PATH):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--db',type=Path,default=DB_PATH)
+    parser.add_argument('--run-time')
     args = parser.parse_args()
     try:
+        run_clock(args.run_time)
         results = validate(args.db)
     except (OSError,sqlite3.Error,ValueError) as exc:
         print('STOP database_read '+str(exc))

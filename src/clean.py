@@ -10,6 +10,7 @@ import sqlite3
 
 from db import DB_PATH, ROOT, connect, snapshot
 from clean_measurements import clean_rows
+from pipeline_runtime import run_clock
 
 SCHEMA = ROOT / "sql/clean_schema.sql"
 SELECT_LICE = "SELECT locality_key, year, week, avg_adult_female_lice, retrieved_at FROM lice_weekly ORDER BY locality_key, year, week"
@@ -117,9 +118,11 @@ def run_clean(db_path=DB_PATH, *, fail_after_rows=None, quiet=False, require_cat
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--db", type=Path, default=DB_PATH)
+    parser.add_argument("--run-time")
     parser.add_argument("--require-categories", action="store_true", help="Final integration guard; fails until Egemen's module exists")
     args = parser.parse_args()
     try:
+        run_clock(args.run_time)
         run_clean(args.db, require_categories=args.require_categories)
     except Exception as exc:
         print(f"ERROR: {type(exc).__name__}: {exc}")

@@ -1,4 +1,5 @@
 """M1 ingestion: land raw BarentsWatch Fish Health responses, untouched, in data/raw/."""
+import argparse
 import json
 import os
 import sys
@@ -9,6 +10,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 from api_client import STATUS_COUNTS, TokenManager, make_request
+from pipeline_runtime import run_clock
 
 BASE = "https://www.barentswatch.no/bwapi/v1/geodata/fishhealth"
 ROOT = Path(__file__).resolve().parent.parent
@@ -93,9 +95,16 @@ def print_summary(stats):
 
 
 def main():
-    load_dotenv()
+    global RAW_DIR
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--run-time')
+    parser.add_argument('--raw-dir', type=Path, default=RAW_DIR)
+    args = parser.parse_args()
+    clock = run_clock(args.run_time)
+    RAW_DIR = args.raw_dir
+    load_dotenv(ROOT / '.env')
     start_year = int(os.environ.get("START_YEAR", 2022))
-    end_year = int(os.environ.get("END_YEAR", datetime.now(timezone.utc).year))
+    end_year = int(os.environ.get("END_YEAR", clock.year))
 
     if not COHORT_FILE.exists():
         print(f"ERROR: {COHORT_FILE} not found. Run: python src/select_cohort.py")

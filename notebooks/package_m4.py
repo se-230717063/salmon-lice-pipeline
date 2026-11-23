@@ -34,7 +34,7 @@ def package():
         raise RuntimeError('Database differs from verified build')
     output=ROOT/'output/m4_submission'
     output.mkdir(parents=True,exist_ok=True)
-    target=connect(output/'salmon_lice.db')
+    target=connect(output/'salmon_lice.db',create=True)
     try:
         source.backup(target)
         if target.execute('PRAGMA integrity_check').fetchone()[0]!='ok':

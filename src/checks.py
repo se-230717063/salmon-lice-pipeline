@@ -108,7 +108,7 @@ def check_idempotence(db_path):
 def check_atomicity(tmp_dir):
     """A load that fails partway leaves every table's row count unchanged."""
     target = pathlib.Path(tmp_dir) / "atomicity.db"
-    con = connect(target)
+    con = connect(target, create=True)
     init_schema(con)
     before = get_table_counts(con)
     con.close()
