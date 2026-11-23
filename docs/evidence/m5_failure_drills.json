@@ -1,0 +1,60 @@
+{
+  "credential_failure": {
+    "exit_code": 1,
+    "steps": [
+      {
+        "step": "src/ingest.py",
+        "exit_code": 1,
+        "kind": "manual"
+      }
+    ]
+  },
+  "load_failure": {
+    "exit_code": 1,
+    "steps": [
+      {
+        "step": "src/load.py",
+        "exit_code": 1,
+        "kind": "manual"
+      }
+    ]
+  },
+  "clean_failure": {
+    "exit_code": 1,
+    "steps": [
+      {
+        "step": "src/load.py",
+        "exit_code": 0,
+        "kind": "manual"
+      },
+      {
+        "step": "src/clean.py",
+        "exit_code": 1,
+        "kind": "manual"
+      }
+    ]
+  },
+  "timeout": {
+    "exit_code": 124,
+    "steps": [
+      {
+        "step": "src/load.py",
+        "exit_code": 124,
+        "kind": "manual"
+      }
+    ]
+  },
+  "concurrent_run": {
+    "second_exit_code": 75,
+    "no_second_step_ran": true,
+    "first_exit_code": 124
+  },
+  "old_file_reloaded": {
+    "newer_value_preserved": true
+  },
+  "real_missed_runs": {
+    "status": "not_yet_performed",
+    "fixture_gap_test_is_not_live_evidence": true
+  },
+  "production_database_unchanged": true
+}

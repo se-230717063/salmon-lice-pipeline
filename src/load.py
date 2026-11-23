@@ -18,6 +18,7 @@ from pathlib import Path
 
 from db import DB_PATH, ROOT, connect, init_schema, table_counts
 from pipeline_runtime import run_clock
+from pipeline_drills import add_arguments, guard
 
 RAW_DIR = ROOT / "data" / "raw"
 LOCALITY_FILE = re.compile(r"^localities_(?P<stamp>\d{8}T\d{6}Z)\.json$")
@@ -444,12 +445,14 @@ def main():
     parser.add_argument('--db', type=Path, default=DB_PATH)
     parser.add_argument('--raw-dir', type=Path, default=RAW_DIR)
     parser.add_argument('--run-time')
+    add_arguments(parser)
     args = parser.parse_args()
     try:
         run_clock(args.run_time)
+        guard(args)
         if not any((args.raw_dir/'localities').glob('*.json')):
             raise ValueError('No landed locality files; refusing an empty build')
-        result = run_load(db_path=args.db, raw_dir=args.raw_dir)
+        result = run_load(db_path=args.db, raw_dir=args.raw_dir,fail_after_rows=args.drill_fail_after)
         if os.environ.get('PIPELINE_METRICS'):
             Path(os.environ['PIPELINE_METRICS']).write_text(json.dumps(result),encoding='utf-8')
     except Exception as exc:

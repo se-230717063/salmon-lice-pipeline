@@ -42,7 +42,7 @@ def run_step(command, *, timeout, output, environment):
 
 def run_pipeline(args):
     clock = iso_time(run_clock(args.run_time))
-    kind = "rebuild" if args.skip_ingest else args.kind
+    kind = 'manual' if args.drill_fail_step or args.drill_hang_step else ('rebuild' if args.skip_ingest else args.kind)
     args.lock.parent.mkdir(parents=True, exist_ok=True)
     try:
         descriptor = os.open(args.lock, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o600)
@@ -71,6 +71,10 @@ def run_pipeline(args):
                 command += ["--raw-dir", str(args.raw_dir.resolve())]
             if step == "src/load.py":
                 command += ["--raw-dir", str(args.raw_dir.resolve())]
+            if Path(step).stem==args.drill_fail_step:
+                command += ['--drill-fail-after',str(args.drill_after)]
+            if Path(step).stem==args.drill_hang_step:
+                command += ['--drill-sleep','30']
             started = wall_time()
             output = output_dir / (Path(step).stem + ".txt")
             code = run_step(command, timeout=args.timeout, output=output, environment=environment)
@@ -104,11 +108,17 @@ def main():
     parser.add_argument("--raw-dir", type=Path, default=ROOT / "data/raw")
     parser.add_argument("--log-db", type=Path, default=LOG_PATH)
     parser.add_argument("--lock", type=Path, default=LOCK_PATH)
+    parser.add_argument('--drill-fail-step',choices=('load','clean'))
+    parser.add_argument('--drill-hang-step',choices=('load','clean'))
+    parser.add_argument('--drill-after',type=int,default=1000)
     args = parser.parse_args()
     if args.timeout <= 0:
         parser.error("--timeout must be positive")
     if args.log_db.resolve() == args.db.resolve():
         parser.error("Run log must be separate from the data database")
+    if args.drill_fail_step or args.drill_hang_step:
+        if args.kind!='manual' or not args.db.resolve().is_relative_to((ROOT/'tmp/m5').resolve()):
+            parser.error('Drills require a manual run and a disposable DB under tmp/m5')
     try:
         raise SystemExit(run_pipeline(args))
     except (OSError, ValueError, sqlite3.Error) as exc:
